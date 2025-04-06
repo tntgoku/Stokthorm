@@ -1,0 +1,211 @@
+<!doctype html>
+<html class="no-js" lang="zxx">
+
+
+<!-- Mirrored from htmldemo.net/corano/corano/login-register.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 29 Jun 2024 09:54:01 GMT -->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Giỏ hàng</title>
+    <meta name="robots" content="noindex, follow" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+
+    <!-- CSS
+	============================================ -->
+    <!-- google fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,900" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/assets/css/vendor/bootstrap.min.css}">
+    <!-- Pe-icon-7-stroke CSS -->
+    <link rel="stylesheet" th:href="@{/assets/css/vendor/pe-icon-7-stroke.css}">
+    <!-- Font-awesome CSS -->
+    <link rel="stylesheet" th:href="@{/assets/css/vendor/font-awesome.min.css}">
+    <!-- Slick slider css -->
+    <link rel="stylesheet" th:href="@{/assets/css/plugins/slick.min.css}">
+    <!-- animate css -->
+    <link rel="stylesheet" th:href="@{/assets/css/plugins/animate.css}">
+    <!-- Nice Select css -->
+    <link rel="stylesheet" th:href="@{/assets/css/plugins/nice-select.css}">
+    <!-- jquery UI css -->
+    <link rel="stylesheet" th:href="@{/assets/css/plugins/jqueryui.min.css}">
+    <!-- main style css -->
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+
+</head>
+
+<body>
+    <!-- Start Header Area -->
+    <header th:replace="~{/Layout/header}"></header>
+    <!-- end Header Area -->
+
+    <main>
+         <!-- Breadcrumb -->
+         <div class="breadcrumb-area">
+            <div class="container">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/"><i class="fa fa-home"></i></a></li>
+                    <li class="breadcrumb-item active">Giỏ hàng</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="container">
+            <div th:if="${listcart != null and !listcart.isEmpty()}">
+                <form method="POST"  id="checkout-form">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="select-all"> Chọn tất cả</th>
+                                <th>Ảnh sản phẩm</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Size</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                <th>Thành tiền</th>
+                                <th>Chức năng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="itemcart : ${listcart}">
+                                <td><input type="checkbox" class="select-product" th:value="${itemcart.getIDItem()}"
+                                        th:attr="data-price=${itemcart.getItem().getPrice()},
+                                                data-quantity=${itemcart.getQuantity()},
+                                                data-discount=${itemcart.getItem().getDiscount()}" /></td>
+                                <!-- Hiển thị ảnh sản phẩm nếu có, nếu không có thì hiển thị thông báo -->
+                                <td th:if="${itemcart.getItem().getListIMG() == null or itemcart.getItem().getListIMG().isEmpty()}">
+                                    <!-- Nếu không có ảnh, có thể hiển thị một thông báo khác hoặc không hiển thị gì -->
+                                    <p>Không có ảnh</p>
+                                </td>
+                                <td th:if="${itemcart.getItem().getListIMG() != null and !itemcart.getItem().getListIMG().isEmpty()}">
+                                    <img th:src="@{${itemcart.getItem().getListIMG().get(0)}}"/>
+                                </td>
+                                <td th:text="${itemcart.getItem().getName()}"></td>
+                                <td th:text="${itemcart.getItem().getSize()}"></td>
+                                <td>
+                                    <p th:text="${#numbers.formatInteger(
+                                                (itemcart.getItem().getPrice() ?: 0) - 
+                                                ((itemcart.getItem().getPrice() ?: 0) * (itemcart.getItem().getDiscount() ?: 0) / 100), 
+                                                0, 'COMMA')} + '₫'" style="color:red"></p>
+                                    <p th:text="${#numbers.formatInteger(itemcart.getItem().getPrice(), 0, 'COMMA')} + '₫'" style="text-decoration: line-through;"></p>
+                                </td>
+                                <td th:text="${itemcart.getQuantity()}"></td>
+                                <td th:text="${#numbers.formatInteger(itemcart.getThanhTien(), 0, 'COMMA')} + '₫'"></td>
+                                <td><a th:href="@{'/cart/remove/' + ${itemcart.getIDItem()}}" class="btn btn-danger">Xóa</a></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6" style="text-align:right; font-weight:bold;">Tổng tiền:</td>
+                                <td th:text="${#numbers.formatInteger(tongTatCaTien, 0, 'COMMA')} + '₫'" style="color:green" id="total-price"></td>
+                                <td><button type="submit" class="btn btn-success">Thanh toán</button></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </form>
+            </div>
+
+            <div th:if="${listcart == null or listcart.isEmpty()}" style="text-align: center;">
+                <p>Giỏ hàng chưa có sản phẩm</p>
+            </div>
+
+            <p class="d-flex justify-content-end">
+                <a href="/orders/history" class="btn btn-info">Lịch sử đơn hàng</a>
+            </p>
+        </div>
+    </main>
+
+    <!-- Scroll to top start -->
+    <div class="scroll-top not-visible">
+        <i class="fa fa-angle-up"></i>
+    </div>
+    <!-- Scroll to Top End -->
+
+    <!-- Start Footer Area -->   
+    <!-- footer area start -->
+    <footer th:replace="~{/Layout/footer}"></footer>
+    <!-- footer area end -->
+
+    <!-- JS
+============================================ -->
+
+    <!-- Modernizer JS -->
+    <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
+    <!-- jQuery JS -->
+    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
+    <!-- slick Slider JS -->
+    <script src="assets/js/plugins/slick.min.js"></script>
+    <!-- Countdown JS -->
+    <script src="assets/js/plugins/countdown.min.js"></script>
+    <!-- Nice Select JS -->
+    <script src="assets/js/plugins/nice-select.min.js"></script>
+    <!-- jquery UI JS -->
+    <script src="assets/js/plugins/jqueryui.min.js"></script>
+    <!-- Image zoom JS -->
+    <script src="assets/js/plugins/image-zoom.min.js"></script>
+    <!-- Images loaded JS -->
+    <script src="assets/js/plugins/imagesloaded.pkgd.min.js"></script>
+    <!-- mail-chimp active js -->
+    <script src="assets/js/plugins/ajaxchimp.js"></script>
+    <!-- contact form dynamic js -->
+    <script src="assets/js/plugins/ajax-mail.js"></script>
+    <!-- google map api -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfmCVTjRI007pC1Yk2o2d_EhgkjTsFVN8"></script>
+    <!-- google map active js -->
+    <script src="assets/js/plugins/google-map.js"></script>
+    <!-- Main JS -->
+    <script src="assets/js/main.js"></script>
+    <script th:src="@{/assets/js/scripthome.js}"></script>
+    <script src="@{/assets/js/scriptpayment.js}"></script>
+    <!-- footer area end -->
+    <script>
+      // Hàm tính tổng tiền
+      function updateTotalPrice() {
+        let total = 0;
+        // Lấy tất cả các checkbox đã được chọn
+        const selectedProducts = document.querySelectorAll('.select-product:checked');
+        selectedProducts.forEach(function(checkbox) {
+            const price = parseFloat(checkbox.getAttribute('data-price'));
+            const discount = parseFloat(checkbox.getAttribute('data-discount'));
+            const quantity = parseInt(checkbox.getAttribute('data-quantity'));
+            
+            // Tính thành tiền của từng sản phẩm sau khi áp dụng giảm giá
+            const discountedPrice = price - (price * discount / 100);
+            const totalPrice = discountedPrice * quantity;
+
+            total += totalPrice;
+        });
+
+        // Cập nhật tổng tiền
+        const totalPriceElement = document.getElementById('total-price');
+        totalPriceElement.textContent = total.toLocaleString() + '₫';
+    }
+
+    // Lắng nghe sự kiện thay đổi trạng thái checkbox
+    const checkboxes = document.querySelectorAll('.select-product');
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', updateTotalPrice);
+    });
+
+    // Lắng nghe sự kiện chọn tất cả checkbox
+    const selectAllCheckbox = document.getElementById('select-all');
+    selectAllCheckbox.addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('.select-product');
+        checkboxes.forEach(function(checkbox) {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+        updateTotalPrice();
+    });
+    </script>
+ 
+</body>
+
+
+<!-- Mirrored from htmldemo.net/corano/corano/login-register.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 29 Jun 2024 09:54:01 GMT -->
+
+</html>

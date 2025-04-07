@@ -1,7 +1,6 @@
 package com.example.clone1.ControllerM;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -128,7 +127,6 @@ public class CartController {
         if (listitem == null || listitem.isEmpty()) {
             return ResponseEntity.ok("/cart"); // Trả về đường dẫn /cart nếu giỏ hàng trống
         }
-
         session.setAttribute("selectedItems", listitemselect);
         return ResponseEntity.ok("/payment"); // Trả về đường dẫn /payment
     }

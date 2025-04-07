@@ -1,7 +1,5 @@
 package com.example.clone1.Model;
 
-import java.util.Objects;
-
 public class CartItem {
     private String IDItem;
     private int Quantity;

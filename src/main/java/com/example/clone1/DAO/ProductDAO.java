@@ -1,6 +1,5 @@
 package com.example.clone1.DAO;
 
-import java.sql.JDBCType;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -123,5 +122,34 @@ public class ProductDAO {
         String id = pro.getID();
         String sql = "SELECT StockQuantity FROM ProductAttributes WHERE ProductID = ?";
         return template.query(sql, new Object[] { id }, (rs, rowNum) -> rs.getString(1));
+    }
+
+    public int updateQuantityPro(Product pro, int quantity) {
+        String sql = "UPDATE  ProductAttributes SET StockQuantity = ? WHERE AttributeID = ?";
+        try {
+            int status = template.update(sql, pro.getQuantity() - quantity, pro.getID());
+            if (status == 0) {
+                return -1; // Nếu không thể cập nhật một sản phẩm, trả về -1
+            }
+            return status;
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace(); // In lỗi ra console/log
+            return -1;
+        }
+    }
+
+    public int deletePro(Product pro) {
+        String sql = "DELETE FROM ProductAttributes Where  AttributeID = ?";
+        try {
+            int status = template.update(sql, pro.getID());
+            if (status == 0)
+                return -1;
+            return status;
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            return -1;
+        }
     }
 }

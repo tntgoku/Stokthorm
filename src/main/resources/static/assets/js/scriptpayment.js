@@ -13,7 +13,6 @@ $(document).ready(function() {
         }
         const selectedItems = [];
         // Nếu có sản phẩm được chọn, thực hiện AJAX gửi dữ liệu
-        const selectedProductIds = [];
         selectedProducts.each(function() {
             const id = $(this).val();
             const quantity = $(this).data('quantity');
@@ -42,6 +41,8 @@ $(document).ready(function() {
                     window.location.href = response; // Chuyển hướng đến trang thanh toán
                 } else if (response === "/cart") {
                     window.location.href = response; // Chuyển hướng về giỏ hàng nếu giỏ trống
+                } else if (response === "/thanksyou") {
+                    window.location.href = response;
                 } else {
                     alert("Có lỗi xảy ra, vui lòng thử lại.");
                 }
@@ -54,53 +55,49 @@ $(document).ready(function() {
 
     });
 
+    $('#checkpayment').submit(function(e) {
+        e.preventDefault();
 
-    $('#ship_to_different').change(function(e) {
         var ten, sdt, diaChi;
         let selectedMethod = $('input[name="paymentmethod"]:checked').val();
+        let checkboxChecked = $('input[name="dia_chi_moi"]').is(':checked'); // lấy trạng thái checkbox đúng cách
 
-        if ($(this).is(':checked')) {
-            // Checkbox được chọn (checked)
+        if (checkboxChecked) {
             console.log("Checkbox đã được bật (checked)");
             ten = $('input[name="ten_nhan"]').val();
             sdt = $('input[name="sdt_nhan"]').val();
             diaChi = $('input[name="dia_chi_nhan"]').val();
-
-
         } else {
-            // Checkbox bị bỏ chọn (unchecked)
             console.log("Checkbox đã được tắt (unchecked)");
             ten = $('input[name="ho_ten"]').val();
             sdt = $('input[name="sdt"]').val();
             diaChi = $('input[name="dia_chi"]').val();
-
         }
-        console.log(ten);
-        console.log(sdt);
-        console.log(diaChi);
-        $.ajax({
-            url: '/payment/checkpayment', // Đường dẫn để xử lý thanh toán
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ ten: ten, sdt: sdt, dia_chi: diaChi, method: selectedMethod }), // Gửi danh sách sản phẩm được chọn
-            success: function(response) {
-                console.log(response); // In ra phản hồi để kiểm tra
 
-                // Kiểm tra nếu phản hồi là URL cần chuyển hướng
-                if (response === "/payment") {
-                    window.location.href = response; // Chuyển hướng đến trang thanh toán
-                } else if (response === "/cart") {
-                    window.location.href = response; // Chuyển hướng về giỏ hàng nếu giỏ trống
-                } else if (response === "/thanksyour") {
+        $.ajax({
+            type: "POST",
+            url: "/payment/checkpayment",
+            contentType: "application/json", // 🟢 gửi dưới dạng JSON
+            data: JSON.stringify({
+                ten: ten,
+                sdt: sdt,
+                diaChi: diaChi,
+                method: selectedMethod // key này phải là "method" để khớp với backend
+            }),
+            dataType: "text", // vì backend trả về chuỗi "/thanksyou" hoặc "/payment"
+            success: function(response) {
+                console.log("Phản hồi từ server:", response);
+                if (response === "/payment/thanksyou") {
                     window.location.href = response;
                 } else {
-                    alert("Có lỗi xảy ra, vui lòng thử lại.");
+
                 }
             },
             error: function(xhr, status, error) {
-                // Nếu có lỗi trong quá trình gửi yêu cầu
-                alert("Lỗi kết nối: " + error);
+                alert("Đã xảy ra lỗi");
+                console.error("Đã xảy ra lỗi:", error);
             }
-        })
+        });
     });
+
 });

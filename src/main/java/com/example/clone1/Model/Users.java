@@ -1,7 +1,5 @@
 package com.example.clone1.Model;
 
-import java.util.Objects;
-
 public class Users {
     private String Id, Name, Date, Gender, Role, Email, Phonenumber, Address;
     private String Password;
@@ -115,7 +113,7 @@ public class Users {
     }
 
     public String getPhonenumber() {
-        return this.Phonenumber;
+        return this.Phonenumber == null ? "NULL" : this.Phonenumber;
     }
 
     public void setPhonenumber(String Phonenumber) {
@@ -123,7 +121,7 @@ public class Users {
     }
 
     public String getAddress() {
-        return this.Address;
+        return this.Address == null ? "NULL" : this.Address;
     }
 
     public void setAddress(String Address) {

@@ -1,13 +1,11 @@
 package com.example.clone1.ControllerM;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.clone1.DAO.ProductDAO;
 import com.example.clone1.DAO.UserDAO;
 import com.example.clone1.Model.Product;
-import com.example.clone1.Model.Users;
 
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class ControllerM {
@@ -63,6 +58,11 @@ public class ControllerM {
         } else {
             System.out.println("Error");
         }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String timestampString = sdf.format(new Date()); // Lấy thời gian hiện tại dưới dạng String
+
+        System.out.println("Timestamp String: " + timestampString);
         return "index";
     }
 

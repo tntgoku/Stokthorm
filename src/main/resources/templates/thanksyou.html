@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEELAB - Xác nhận đơn hàng</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/assets/css/stylecs.css}">
+       <!-- Bootstrap CSS -->
+       <link rel="stylesheet" th:href="@{/assets/css/vendor/bootstrap.min.css}">
+       <!-- Pe-icon-7-stroke CSS -->
+       <link rel="stylesheet" th:href="@{/assets/css/vendor/pe-icon-7-stroke.css}">
+       <!-- Font-awesome CSS -->
+       <link rel="stylesheet" th:href="@{/assets/css/vendor/font-awesome.min.css}">
+       <!-- Slick slider css -->
+       <link rel="stylesheet" th:href="@{/assets/css/plugins/slick.min.css}">
+       <!-- animate css -->
+       <link rel="stylesheet" th:href="@{/assets/css/plugins/animate.css}">
+       <!-- Nice Select css -->
+       <link rel="stylesheet" th:href="@{/assets/css/plugins/nice-select.css}">
+       <!-- jquery UI css -->
+       <link rel="stylesheet" th:href="@{/assets/css/plugins/jqueryui.min.css}">
+       <!-- main style css -->
+       <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <div class="logo">TEELAB</div>
+        
+        <div class="confirmation-header" style="display:flex;">
+            <div class="check-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"    width: 72px;
+                height: 72px;>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <div class="confirmation-text">Cảm ơn bạn đã đặt hàng</div>
+        </div>
+        
+        <div class="info-col">
+            <div class = "col col--primary">
+                <div class="info-row">
+                    <div class="info-section">
+                        <h2>Thông tin mua hàng</h2>
+                        <div id="name-user">adawd</div>
+                        <div id="phone-user">+84969553611</div>
+                    </div>
+                    <div class="info-section">
+                        <h2>Địa chỉ nhận hàng</h2>
+                        <div id="address">adawd</div>
+                        <div>Phường Lê Lợi, Thị xã Sơn Tây, Hà Nội</div>
+                        <div id="phonesss">+84969553611</div>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-section">
+                        <h2>Phương thức thanh toán</h2>
+                        <div >Thanh toán khi giao hàng (COD)</div>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h2>Phương thức vận chuyển</h2>
+                        <div>Giao hàng thông thường</div>
+                    </div>
+                </div>
+            </div>
+            <div class=" col col--secondary">
+                <div class="order-summary" style="background-color: #fafafa; padding:0px 5px">
+                <div class="order-header">
+                    Đơn hàng #W74332 (1)
+                </div>
+                <div class="product-item">
+                    <div class="product-image">
+                        <span>1</span>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Áo Thun Local Brand Unisex Teelab Capybara With Reindeer Antlers Tshirt TS293</div>
+                        <div class="product-variant">S / M</div>
+                    </div>
+                    <div class="product-price">195.000₫</div>
+                </div>
+                
+                <div class="order-totals">
+                    <div class="total-row">
+                        <div>Tạm tính</div>
+                        <div id="total-line__price">195.000₫</div>
+                    </div>
+                    <div class="total-line total-line--shipping-fee total-row">
+                        <div>Phí vận chuyển</div>
+                        <div id="total-line__price"> 25.000₫</div>
+                    </div>
+                    <div class="total-row final">
+                        <div>Tổng cộng</div>
+                        <div id="payment-due__price">220.000₫</div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        
+        
+        <div class="actions">
+            <a th:href="@{/}" class="btn-continue">Tiếp tục mua hàng</a>
+            <a href="#" class="btn-print">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
+                    <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                    <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2h2V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+                </svg>
+                In
+            </a>
+        </div>
+        
+        <div class="footer">
+            TEELAB Official | Copyright CELESTEE LLC
+        </div>
+    </div>
+
+    <!-- Bootstrap and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Print functionality
+            $('.btn-print').on('click', function(e) {
+                e.preventDefault();
+                window.print();
+            });
+
+            // Continue shopping button
+            $('.btn-continue').on('click', function(e) {
+                e.preventDefault();
+                // Redirect to homepage or product listing
+                // window.location.href = '/';
+                alert('Redirecting to continue shopping...');
+            });
+        });
+    </script>
+        <!-- Modernizer JS -->
+        <script  th:src="@{/assets/js/vendor/modernizr-3.6.0.min.js}"></script>
+        <!-- jQuery JS -->
+        <script th:src="@{/assets/js/vendor/jquery-3.6.0.min.js}"></script>
+        <!-- Bootstrap JS -->
+        <script th:src="@{/assets/js/vendor/bootstrap.bundle.min.js}"></script>
+        <!-- slick Slider JS -->
+        <script th:src="@{/assets/js/plugins/slick.min.js}"></script>
+        <!-- Countdown JS -->
+        <script th:src="@{/assets/js/plugins/countdown.min.js}"></script>
+        <!-- Nice Select JS -->
+        <script th:src="@{/assets/js/plugins/nice-select.min.js}"></script>
+        <!-- jquery UI JS -->
+        <script th:src="@{/assets/js/plugins/jqueryui.min.js}"></script>
+        <!-- Image zoom JS -->
+        <script th:src="@{/assets/js/plugins/image-zoom.min.js}"></script>
+        <!-- Images loaded JS -->
+        <script th:src="@{/assets/js/plugins/imagesloaded.pkgd.min.js}"></script>
+        <!-- mail-chimp active js -->
+        <script th:src="@{/assets/js/plugins/ajaxchimp.js}"></script>
+        <!-- contact form dynamic js -->
+        <script th:src="@{/assets/js/plugins/ajax-mail.js}"></script>
+        <!-- google map api -->
+        <script th:src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfmCVTjRI007pC1Yk2o2d_EhgkjTsFVN8"></script>
+        <!-- google map active js -->
+        <script th:src="@{/assets/js/plugins/google-map.js}"></script>
+        <!-- Main JS -->
+        <script th:src="@{/assets/js/main.js}"></script>
+</body>
+</html>

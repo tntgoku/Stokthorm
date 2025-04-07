@@ -2,10 +2,14 @@ package com.example.clone1.DAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -56,13 +60,30 @@ public class UserDAO {
         });
     }
 
+    public String getLastUserID() {
+        String sql = "SELECT TOP 1 UserID FROM Users ORDER BY UserID DESC";
+        try {
+            return template.queryForObject(sql, String.class);
+        } catch (EmptyResultDataAccessException e) {
+            // Handle case where no result is found, return null or a default value
+            System.out.println("No orders found in the database.");
+            return null; // or throw a custom exception
+        }
+    }
+
     // Example method to create a new user
     public void createUser(Users user) {
-        String sql = "INSERT INTO Users (FullName, Email, PhoneNumber, Address, Pwd, Role) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Users (UserID,,FullName, Email, PhoneNumber, Address, Pwd) VALUES (?, ?, ?, ?, ?, ?)";
         try {
-            template.update(sql, user.getName(), user.getEmail(), user.getPhonenumber(),
-                    user.getAddress(), user.getPassword(), user.getRole());
-            System.out.println("User created successfully!");
+            template.update(sql, user.getId(), user.getName(), user.getEmail(), user.getPhonenumber(),
+                    user.getAddress(), user.getPassword());
+            System.out.println("\n\n\n\n\n\nUser created successfully!\\n" + //
+                    "\\n" + //
+                    "\\n" + //
+                    "\\n" + //
+                    "\\n" + //
+                    "\\n" + //
+                    "");
         } catch (DataAccessException e) {
             System.err.println("Error inserting user: " + e.getMessage());
         }

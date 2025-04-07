@@ -73,7 +73,7 @@
                 <form action=" " method="post">
                     <div class="row">
                         <!-- Checkout Billing Details -->
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
                             <div class="checkout-billing-details-wrap">
                                 <h5 class="checkout-title">Thông tin thanh toán</h5>
                                 <div class="billing-form-wrap">
@@ -130,7 +130,7 @@
                         </div>
 
                         <!-- Order Summary Details -->
-                        <div class="col-lg-6">
+                        <div class="col-lg-8">
                             <div class="order-summary-details">
                                 <h5 class="checkout-title">Tóm tắt đơn hàng của bạn</h5>
                                 <div class="order-summary-content">
@@ -148,13 +148,16 @@
                                             </thead>
                                             <tbody>
                                         
-                                                <tr th:for="itemcart : ${selectedItems}">
+                                                <tr th:each="itemcart : ${selectedItems}">
                                                     <td th:text="${itemcart.getItem().getName()}"></td>
                                                     <td th:text="${itemcart.getQuantity}"></td>
                                                     <td th:text="${itemcart.getItem().getSize()}"></td>
-                                                    <td th:text="${itemcart.getItem().getPrice()}+'₫'"></td>
-                                                    <td th:text="${itemcart.getItem().getDiscount()}+'₫'"></td>
-                                                    <td th:text="${itemcart.getThanhTien()}+ '₫'"></td>
+                                                    <td th:text="${itemcart.getItem().getPrice()-
+                                                    (
+                                                    itemcart.getItem().getPrice() * (itemcart.getItem().getDiscount()/100) )}+'₫'"></td>
+                                                    <td th:text="${(itemcart.getItem().getPrice()-
+                                                    (
+                                                    itemcart.getItem().getPrice() * (itemcart.getItem().getDiscount()/100) ))*itemcart.getQuantity()}+'₫'"></td>
                                                     <input type="hidden" name="select-product" th:value="${itemcart.getItem().getID()}">
                                                     <input type="hidden" name="product-quantity"th:value="${itemcart.getQuantity()}">
                                                     <input type="hidden" name="product-price" th:value="${itemcart.getItem().getPrice()}+'₫'">
@@ -165,7 +168,7 @@
                                                     <td colspan="4" style="text-align:right; font-size: 1.2vw;"><b>Tổng
                                                             tiền:</b>
                                                     </td>
-                                                    <td><strong style="font-size: 1.2vw; font-weight:700;color:green" th:text="tongtien"></strong>
+                                                    <td><strong style="font-size: 1.2vw; font-weight:700;color:green" th:text="${totalAmount==0 ?' ' :totalAmount} + ' ₫'"></strong>
                                                     </td>
                                                 </tr>
                                             </tfoot>
@@ -177,12 +180,17 @@
                                         <div class="single-payment-method show">
                                             <div class="payment-method-name">
                                                 <div class="custom-control custom-radio">
-                                                    <input type="radio" id="cashon" name="paymentmethod" value="cash"
+                                                    <input type="radio" id="cashon" name="paymentmethod" value="cod"
                                                         class="custom-control-input" checked />
-                                                    <label class="custom-control-label" for="cashon">Thanh toán khi nhận
-                                                        hàng</label>
+                                                    <label class="custom-control-label" for="cashon">Thanh toán khi nhận hàng</label>
+                                                </div>
+                                                <div class="custom-control custom-radio" style="margin-top: 0.7rem;">
+                                                    <input type="radio" id="cashon1" name="paymentmethod" value="payment"
+                                                        class="custom-control-input" />
+                                                    <label class="custom-control-label" for="cashon1">Thanh toán VNPAY</label>
                                                 </div>
                                             </div>
+                                            
                                         </div>
                                         <div class="summary-footer-area">
                                             <button type="submit" class="btn btn-sqr">Đặt hàng</button>
@@ -213,34 +221,35 @@
     ============================================ -->
 
     <!-- Modernizer JS -->
-    <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
+    <script th:src="@{/assets/js/vendor/modernizr-3.6.0.min.js}"></script>
     <!-- jQuery JS -->
-    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/assets/js/vendor/jquery-3.6.0.min.js}"></script>
     <!-- Bootstrap JS -->
-    <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/assets/js/vendor/bootstrap.bundle.min.js}"></script>
     <!-- slick Slider JS -->
-    <script src="assets/js/plugins/slick.min.js"></script>
+    <script th:src="@{/assets/js/plugins/slick.min.js}"></script>
     <!-- Countdown JS -->
-    <script src="assets/js/plugins/countdown.min.js"></script>
+    <script th:src="@{/assets/js/plugins/countdown.min.js}"></script>
     <!-- Nice Select JS -->
-    <script src="assets/js/plugins/nice-select.min.js"></script>
+    <script th:src="@{/assets/js/plugins/nice-select.min.js}"></script>
     <!-- jquery UI JS -->
-    <script src="assets/js/plugins/jqueryui.min.js"></script>
+    <script th:src="@{/assets/js/plugins/jqueryui.min.js}"></script>
     <!-- Image zoom JS -->
-    <script src="assets/js/plugins/image-zoom.min.js"></script>
+    <script th:src="@{/assets/js/plugins/image-zoom.min.js}"></script>
     <!-- Images loaded JS -->
-    <script src="assets/js/plugins/imagesloaded.pkgd.min.js"></script>
+    <script th:src="@{/assets/js/plugins/imagesloaded.pkgd.min.js}"></script>
     <!-- mail-chimp active js -->
-    <script src="assets/js/plugins/ajaxchimp.js"></script>
+    <script th:src="@{/assets/js/plugins/ajaxchimp.js}"></script>
     <!-- contact form dynamic js -->
-    <script src="assets/js/plugins/ajax-mail.js"></script>
+    <script th:src="@{/assets/js/plugins/ajax-mail.js}"></script>
     <!-- google map api -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfmCVTjRI007pC1Yk2o2d_EhgkjTsFVN8"></script>
+    <!-- <script th:src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfmCVTjRI007pC1Yk2o2d_EhgkjTsFVN8"></script> -->
     <!-- google map active js -->
-    <script src="assets/js/plugins/google-map.js"></script>
+    <script th:src="@{assets/js/plugins/google-map.js}"></script>
     <!-- Main JS -->
-    <script src="assets/js/main.js"></script>
+    <script th:src="@{assets/js/main.js}"></script>
     <script th:src="@{/assets/js/scripthome.js}"></script>
+    <script th:src="@{/assets/js/scriptpayment.js}"></script>
     <!-- footer area end -->
 
 

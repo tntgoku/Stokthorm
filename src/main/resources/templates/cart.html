@@ -55,7 +55,7 @@
 
         <div class="container">
             <div th:if="${listcart != null and !listcart.isEmpty()}">
-                <form method="POST"  id="checkout-form">
+                <form  id="checkout-form">
                     <table class="table">
                         <thead>
                             <tr>
@@ -81,8 +81,9 @@
                                     <p>Không có ảnh</p>
                                 </td>
                                 <td th:if="${itemcart.getItem().getListIMG() != null and !itemcart.getItem().getListIMG().isEmpty()}">
-                                    <img th:src="@{${itemcart.getItem().getListIMG().get(0)}}"/>
-                                </td>
+                                    <img th:src="@{${itemcart.getItem().getListIMG().get(0)}}"
+                                        style="width: 100px; height: 100px;" alt="Product Image" />
+                               </td>
                                 <td th:text="${itemcart.getItem().getName()}"></td>
                                 <td th:text="${itemcart.getItem().getSize()}"></td>
                                 <td>
@@ -133,35 +134,37 @@
 ============================================ -->
 
     <!-- Modernizer JS -->
-    <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
+
+    <!-- Modernizer JS -->
+    <script th:src="@{/assets/js/vendor/modernizr-3.6.0.min.js}"></script>
     <!-- jQuery JS -->
-    <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/assets/js/vendor/jquery-3.6.0.min.js}"></script>
     <!-- Bootstrap JS -->
-    <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/assets/js/vendor/bootstrap.bundle.min.js}"></script>
     <!-- slick Slider JS -->
-    <script src="assets/js/plugins/slick.min.js"></script>
+    <script th:src="@{/assets/js/plugins/slick.min.js}"></script>
     <!-- Countdown JS -->
-    <script src="assets/js/plugins/countdown.min.js"></script>
+    <script th:src="@{/assets/js/plugins/countdown.min.js}"></script>
     <!-- Nice Select JS -->
-    <script src="assets/js/plugins/nice-select.min.js"></script>
+    <script th:src="@{/assets/js/plugins/nice-select.min.js}"></script>
     <!-- jquery UI JS -->
-    <script src="assets/js/plugins/jqueryui.min.js"></script>
+    <script th:src="@{/assets/js/plugins/jqueryui.min.js}"></script>
     <!-- Image zoom JS -->
-    <script src="assets/js/plugins/image-zoom.min.js"></script>
+    <script th:src="@{/assets/js/plugins/image-zoom.min.js}"></script>
     <!-- Images loaded JS -->
-    <script src="assets/js/plugins/imagesloaded.pkgd.min.js"></script>
+    <script th:src="@{/assets/js/plugins/imagesloaded.pkgd.min.js}"></script>
     <!-- mail-chimp active js -->
-    <script src="assets/js/plugins/ajaxchimp.js"></script>
+    <script th:src="@{/assets/js/plugins/ajaxchimp.js}"></script>
     <!-- contact form dynamic js -->
-    <script src="assets/js/plugins/ajax-mail.js"></script>
+    <script th:src="@{/assets/js/plugins/ajax-mail.js}"></script>
     <!-- google map api -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfmCVTjRI007pC1Yk2o2d_EhgkjTsFVN8"></script>
+    <!-- <script th:src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfmCVTjRI007pC1Yk2o2d_EhgkjTsFVN8"></script> -->
     <!-- google map active js -->
-    <script src="assets/js/plugins/google-map.js"></script>
+    <script th:src="@{assets/js/plugins/google-map.js}"></script>
     <!-- Main JS -->
-    <script src="assets/js/main.js"></script>
+    <script th:src="@{assets/js/main.js}"></script>
     <script th:src="@{/assets/js/scripthome.js}"></script>
-    <script src="@{/assets/js/scriptpayment.js}"></script>
+    <script th:src="@{/assets/js/scriptpayment.js}"></script>
     <!-- footer area end -->
     <script>
       // Hàm tính tổng tiền

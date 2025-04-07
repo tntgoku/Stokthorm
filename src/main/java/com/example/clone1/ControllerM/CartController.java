@@ -12,9 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.example.clone1.DAO.*;
@@ -108,19 +105,32 @@ public class CartController {
     }
 
     @PostMapping("/checkout")
-    public String checkout(
-            HttpSession session, Model model) {
+    public ResponseEntity<String> checkout(HttpSession session,
+            @RequestBody Map<String, List<Map<String, Object>>> requestData) {
+        List<Map<String, Object>> request = requestData.get("products");
+        System.out.println("Sản phẩm được chọn để thanh toán: " + requestData.toString());
 
-        List<CartItem> listitem = (List<CartItem>) session.getAttribute("listcart");
-        if (listitem == null || listitem.isEmpty()) {
-            model.addAttribute("error", "Giỏ hàng trống!");
-            return "redirect:/cart";
+        List<CartItem> listitemselect = new ArrayList<>();
+        for (Map<String, Object> item : request) {
+            String id = item.get("id") != null ? item.get("id").toString() : "";
+            String quantity = item.get("quantity") != null ? item.get("quantity").toString() : "";
+            String price = item.get("price") != null ? item.get("price").toString() : "";
+            String discount = item.get("discount") != null ? item.get("discount").toString() : "";
+
+            Product temps = productDAO.FindProduct1(id);
+            temps.setListIMG(productDAO.getListIMG(temps));
+            listitemselect.add(new CartItem(id, Integer.parseInt(quantity), temps));
         }
 
-        // Xử lý thanh toán ở đây (lưu vào database, gửi email, v.v.)
-        // Sau khi thanh toán thành công, xóa giỏ hàng
-        session.removeAttribute("listcart");
+        // Giả lập danh sách sản phẩm đã chọn để thanh toán
+        List<CartItem> listitem = (List<CartItem>) session.getAttribute("listcart");
 
-        return "redirect:/payment";
+        if (listitem == null || listitem.isEmpty()) {
+            return ResponseEntity.ok("/cart"); // Trả về đường dẫn /cart nếu giỏ hàng trống
+        }
+
+        session.setAttribute("selectedItems", listitemselect);
+        return ResponseEntity.ok("/payment"); // Trả về đường dẫn /payment
     }
+
 }

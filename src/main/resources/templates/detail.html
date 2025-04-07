@@ -115,7 +115,7 @@
                                                             data-discount=${producttemp.discount},
                                                             data-stock=${producttemp.quantity},
                                                             data-color=${producttemp.color},
-                                                            data-spbt-id=${producttemp.ID}" th:text="${producttemp.size}">
+                                                            data-spbt-id=${producttemp.ID}" th:text="${producttemp.size}+' '+${producttemp.color}">
                                                     </button>
                                                 </div>
                                             </div>
@@ -408,7 +408,8 @@
                         originalPrice.style.display = 'inline';
                     } else {
                         selectedPrice.textContent = price.toLocaleString() + '₫';
-                        originalPrice.style.display = 'none';
+                        originalPrice.textContent = price.toLocaleString() + '₫';
+                    //    originalPrice.style.display = 'none';
                     }
     
                     // Cập nhật số lượng sản phẩm

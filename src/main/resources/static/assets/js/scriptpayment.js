@@ -57,22 +57,8 @@ $(document).ready(function() {
 
     $('#checkpayment').submit(function(e) {
         e.preventDefault();
-
         var ten, sdt, diaChi;
         let selectedMethod = $('input[name="paymentmethod"]:checked').val();
-        let checkboxChecked = $('input[name="dia_chi_moi"]').is(':checked'); // lấy trạng thái checkbox đúng cách
-
-        if (checkboxChecked) {
-            console.log("Checkbox đã được bật (checked)");
-            ten = $('input[name="ten_nhan"]').val();
-            sdt = $('input[name="sdt_nhan"]').val();
-            diaChi = $('input[name="dia_chi_nhan"]').val();
-        } else {
-            console.log("Checkbox đã được tắt (unchecked)");
-            ten = $('input[name="ho_ten"]').val();
-            sdt = $('input[name="sdt"]').val();
-            diaChi = $('input[name="dia_chi"]').val();
-        }
 
         $.ajax({
             type: "POST",
@@ -99,5 +85,32 @@ $(document).ready(function() {
             }
         });
     });
-
+    // $("#ship_to_different").change(function() {
+    //     if ($(this).is(":checked")) {
+    //         console.log("Checkbox đã được bật");
+    //         console.log("Checkbox đã được bật (checked)");
+    //         ten = $('input[name="ten_nhan"]').val();
+    //         sdt = $('input[name="sdt_nhan"]').val();
+    //         diaChi = $('input[name="dia_chi_nhan"]').val();
+    //         console.log(ten + ", " + sdt + ", " + diaChi);
+    //         // Thêm hành động khi bật
+    //     } else {
+    //         console.log("Checkbox đã được tắt");
+    //         console.log("Checkbox đã được tắt (unchecked)");
+    //         ten = $('input[name="ho_ten"]').val();
+    //         sdt = $('input[name="sdt"]').val();
+    //         diaChi = $('input[name="dia_chi"]').val();
+    //         // Thêm hành động khi tắt
+    //         console.log(ten + ", " + sdt + ", " + diaChi);
+    //     }
+    // });
+    $('#ship_to_different').change(function() {
+        if ($(this).is(':checked')) {
+            alert('Bạn đã chọn gửi đến địa chỉ khác!');
+            // $('#another-address').show();
+        } else {
+            alert('Bạn đã bỏ chọn gửi đến địa chỉ khác.');
+            // $('#another-address').hide();
+        }
+    });
 });

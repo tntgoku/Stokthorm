@@ -40,7 +40,7 @@ public class OrderDAO {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         String timestampString = sdf.format(new Date()); // Lấy thời gian hiện tại dưới dạng String
         order.setOrderDate(timestampString); // Đặt thời gian hiện tại vào đơn hàng
-        String sql = "INSERT INTO Orders (OrderID, UserID, OrderDate, Note, ShippingFee, TotalAmount, paymentMethod, paymentStatus) VALUES  (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Orders (OrderID, UserID, OrderDate, Note, ShippingFee, TotalAmount, paymentMethod, paymentStatus) VALUES  (?, ?, ?, ?, ?, ?, ?, ?)";
         int id = Integer.parseInt(getLatestOrderId()); // Lấy ID đơn hàng mới nhất
         id++;
         order.setOrderId(String.valueOf(id)); // Đặt ID đơn hàng mới nhất vào đơn hàng

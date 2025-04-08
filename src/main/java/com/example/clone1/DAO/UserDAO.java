@@ -73,7 +73,7 @@ public class UserDAO {
 
     // Example method to create a new user
     public void createUser(Users user) {
-        String sql = "INSERT INTO Users (UserID,,FullName, Email, PhoneNumber, Address, Pwd) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Users (UserID,FullName, Email, PhoneNumber, Address, Pwd) VALUES (?, ?, ?, ?, ?, ?)";
         try {
             template.update(sql, user.getId(), user.getName(), user.getEmail(), user.getPhonenumber(),
                     user.getAddress(), user.getPassword());

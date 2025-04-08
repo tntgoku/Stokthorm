@@ -131,4 +131,8 @@ public class ControllerM {
         return "detail";
     }
 
+    @GetMapping("/alert-redirect")
+    public String alertRedirect() {
+        return "alertredirect"; // view trung gian
+    }
 }

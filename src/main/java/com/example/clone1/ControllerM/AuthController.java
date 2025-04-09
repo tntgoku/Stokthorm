@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.clone1.DAO.OrderDAO;
 import com.example.clone1.DAO.UserDAO;
 import com.example.clone1.Model.Users;
 
@@ -26,6 +27,8 @@ public class AuthController {
     ControllerM controller;
     @Autowired
     UserDAO userDAO;
+    @Autowired
+    private OrderDAO da;
 
     @PostMapping("/check-login")
     public ResponseEntity<Map<String, Object>> checkLogin(@RequestBody Map<String, Object> loginRequest,
@@ -53,6 +56,8 @@ public class AuthController {
                 response.put("message", "Đăng nhập thành công Admin!");
             } else {
                 response.put("homepage", "/");
+
+                System.out.print(da.getCartItemsByOrderId("91").toString());
                 response.put("message", "Đăng nhập thành công!");
             }
             // Xử lý "Ghi nhớ tài khoản"

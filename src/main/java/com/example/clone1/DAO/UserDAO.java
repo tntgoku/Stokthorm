@@ -2,9 +2,6 @@ package com.example.clone1.DAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +11,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.example.clone1.Model.Product;
 import com.example.clone1.Model.Users;
 
 @Repository
@@ -47,7 +43,7 @@ public class UserDAO {
     // Example method to get a user by ID
     public Users getUserById(String id) {
         String sql = "SELECT * FROM Users WHERE UserID = ?";
-        return template.queryForObject(sql, new Object[] { id }, (rs, rowNum) -> {
+        return template.queryForObject(sql, (rs, rowNum) -> {
             Users user = new Users();
             user.setId(rs.getString("UserID"));
             user.setName(rs.getString("FullName"));
@@ -57,7 +53,7 @@ public class UserDAO {
             user.setAddress(rs.getString("Address"));
             user.setRole(rs.getString("Role"));
             return user;
-        });
+        }, id);
     }
 
     public String getLastUserID() {
@@ -72,20 +68,14 @@ public class UserDAO {
     }
 
     // Example method to create a new user
-    public void createUser(Users user) {
-        String sql = "INSERT INTO Users (UserID,FullName, Email, PhoneNumber, Address, Pwd) VALUES (?, ?, ?, ?, ?, ?)";
+    public int createUser(Users user) {
+        String sql = "INSERT INTO Users (UserID, FullName, Email, PhoneNumber, Address, Pwd, Role) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
-            template.update(sql, user.getId(), user.getName(), user.getEmail(), user.getPhonenumber(),
-                    user.getAddress(), user.getPassword());
-            System.out.println("\n\n\n\n\n\nUser created successfully!\\n" + //
-                    "\\n" + //
-                    "\\n" + //
-                    "\\n" + //
-                    "\\n" + //
-                    "\\n" + //
-                    "");
+            return template.update(sql, user.getId(), user.getName(), user.getEmail(), user.getPhonenumber(),
+                    user.getAddress(), user.getPassword(), user.getRole());
         } catch (DataAccessException e) {
             System.err.println("Error inserting user: " + e.getMessage());
+            return -1;
         }
     }
 
@@ -99,6 +89,26 @@ public class UserDAO {
             System.out.println("User updated successfully!");
         } catch (DataAccessException e) {
             System.err.println("Error updating user: " + e.getMessage());
+        }
+    }
+
+    public boolean checkEmail(String email) {
+        String sql = "SELECT TOP 1 Email FROM users WHERE Email = ?";
+        try {
+            String result = template.queryForObject(sql, String.class, email);
+            return result != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean checkPhone(String email) {
+        String sql = "SELECT TOP 1 PhoneNumber FROM users WHERE PhoneNumber = ?";
+        try {
+            String result = template.queryForObject(sql, String.class, email);
+            return result != null;
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -116,12 +126,12 @@ public class UserDAO {
 
     public int checkLogin(String email, String password) {
         String sql = "SELECT COUNT(*) FROM Users WHERE Email = ? AND Pwd = ?";
-        return template.queryForObject(sql, new Object[] { email, password }, Integer.class);
+        return template.queryForObject(sql, Integer.class, email, password);
     }
 
     public Users getUserByEmail(String email) {
         String sql = "SELECT * FROM Users WHERE Email = ?";
-        return template.queryForObject(sql, new Object[] { email }, (rs, rowNum) -> {
+        return template.queryForObject(sql, (rs, rowNum) -> {
             Users user = new Users();
             user.setId(rs.getString("UserID"));
             user.setName(rs.getString("FullName"));
@@ -131,6 +141,6 @@ public class UserDAO {
             user.setAddress(rs.getString("Address"));
             user.setRole(rs.getString("Role"));
             return user;
-        });
+        }, email);
     }
 }

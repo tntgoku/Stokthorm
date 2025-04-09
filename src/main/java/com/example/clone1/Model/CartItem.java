@@ -33,6 +33,10 @@ public class CartItem {
         this.giasp = giasp;
     }
 
+    public String getIDItem1() {
+        return this.IDItem;
+    }
+
     public String getIDItem() {
         return item.getID();
     }
@@ -75,7 +79,7 @@ public class CartItem {
     @Override
     public String toString() {
         return "{" +
-                " IDItem='" + getIDItem() + "'" +
+                " IDItem='" + (getIDItem1() == null ? ' ' : getIDItem1()) + "'" +
                 ", Quantity='" + getQuantity() + "'" +
                 ", item='" + getItem() + "'" +
                 "}";

@@ -1,0 +1,220 @@
+<!doctype html>
+<html class="no-js" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+
+
+<!-- Mirrored from htmldemo.net/corano/corano/login-register.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 29 Jun 2024 09:54:01 GMT -->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Đăng ký</title>
+    <meta name="robots" content="noindex, follow" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <!-- Favicon -->
+   <link rel="shortcut icon" type="image/x-icon" th:href="@{/assets/img/favicon.ico}">
+
+   <!-- CSS
+   ============================================ -->
+   <!-- google fonts -->
+   <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,900" rel="stylesheet">
+   <!-- Bootstrap CSS -->
+   <link rel="stylesheet" th:href="@{/assets/css/vendor/bootstrap.min.css}">
+   <!-- Pe-icon-7-stroke CSS -->
+   <link rel="stylesheet" th:href="@{/assets/css/vendor/pe-icon-7-stroke.css}">
+   <!-- Font-awesome CSS -->
+   <link rel="stylesheet" th:href="@{/assets/css/vendor/font-awesome.min.css}">
+   <!-- Slick slider css -->
+   <link rel="stylesheet" th:href="@{/assets/css/plugins/slick.min.css}">
+   <!-- animate css -->
+   <link rel="stylesheet" th:href="@{/assets/css/plugins/animate.css}">
+   <!-- Nice Select css -->
+   <link rel="stylesheet" th:href="@{/assets/css/plugins/nice-select.css}">
+   <!-- jquery UI css -->
+   <link rel="stylesheet" th:href="@{/assets/css/plugins/jqueryui.min.css}">
+   <!-- main style css -->
+   <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+
+</head>
+
+<body>
+    <!-- Start Header Area -->
+    <header  th:replace="~{Layout/header}"></header>
+
+    <main>
+        <!-- breadcrumb area start -->
+        <div class="breadcrumb-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="breadcrumb-wrap">
+                            <nav aria-label="breadcrumb">
+                                <ul class="breadcrumb">
+                                    <li class="breadcrumb-item"><a
+                                            th:href="@{/}"><i
+                                                class="fa fa-home"></i></a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Đăng ký</li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- breadcrumb area end -->
+
+        <!-- login register wrapper start -->
+        <div class="login-register-wrapper section-padding">
+            <div class="container">
+                <div class="member-area-from-wrap">
+                    <div class="row justify-content-center">
+                        <!-- Login Content Start -->
+                        <div class="col-lg-7 ">
+                            <div class="login-reg-form-wrap">
+                                <h5>Đăng Ký</h5>
+                                <form method="post" th:object="${userRegister}" id="form-register">
+                                    <div class="single-input-item">
+                                        <input type="text" th:field="*{name}" placeholder="Tên người dùng" />
+                                        <p class="text-danger" data-error="name"></p>
+                                    </div>
+                                
+                                    <div class="single-input-item">
+                                        <input type="email" th:field="*{email}" placeholder="email@gmail.com" />
+                                        <p class="text-danger" data-error="email"></p>
+                                    </div>
+                                
+                                    <div class="single-input-item">
+                                        <input type="text" th:field="*{phonenumber}" placeholder="Số điện thoại" />
+                                        <p class="text-danger" data-error="phonenumber"></p>
+                                    </div>
+                                
+                                    <div class="single-input-item">
+                                        <input type="text" th:field="*{address}" placeholder="Địa chỉ nơi trốn" />
+                                        <p class="text-danger" data-error="address"></p>
+                                    </div>
+                                
+                                    <div class="single-input-item">
+                                        <input type="password" th:field="*{password}" placeholder="Mật khẩu" />
+                                        <p class="text-danger" data-error="password"></p>
+                                    </div>
+                                
+                                    <div class="single-input-item">
+                                        <input type="password" th:field="*{mat_khau}" placeholder="Nhập lại mật khẩu" />
+                                        <p class="text-danger" data-error="mat_khau"></p>
+                                        <p class="text-danger" data-error="checkPassword"></p>
+                                    </div>
+                                
+                                    <div class="single-input-item">
+                                        <div class="login-reg-form-meta d-flex align-items-center justify-content-between">
+                                            <div class="remember-meta">
+                                                <button type="submit" class="btn btn-sqr">Đăng ký</button>
+                                            </div>
+                                            <span>Bạn đã có tài khoản? <br>Mời đến trang 
+                                                <a style="font-size: 16px;" th:href="@{/login}" class="forget-pwd">Đăng nhập</a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </form>
+                                
+                                
+                                
+                            </div>
+                        </div>
+                        <!-- Login Content End -->
+
+                        <!-- Register Content Start -->
+
+                        <!-- Register Content End -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- login register wrapper end -->
+    </main>
+
+    <!-- Scroll to top start -->
+    <div class="scroll-top not-visible">
+        <i class="fa fa-angle-up"></i>
+    </div>
+    <!-- Scroll to Top End -->
+
+    <!-- footer area start -->
+    <footer th:replace="~{/Layout/footer}"></footer>
+    <!-- footer area end -->
+
+    <!-- Quick view modal start -->
+    <!-- Quick view modal end -->
+
+    <!-- offcanvas mini cart start -->
+    <!-- offcanvas mini cart end -->
+
+    <!-- JS
+============================================ -->
+
+    <!-- Modernizer JS -->
+    <script th:src="@{/assets/js/vendor/modernizr-3.6.0.min.js}"></script>
+    <!-- jQuery JS -->
+    <script th:src="@{/assets/js/vendor/jquery-3.6.0.min.js}"></script>
+    <!-- Bootstrap JS -->
+    <script th:src="@{/assets/js/vendor/bootstrap.bundle.min.js}"></script>
+    <!-- slick Slider JS -->
+    <script th:src="@{/assets/js/plugins/slick.min.js}"></script>
+    <!-- Countdown JS -->
+    <script th:src="@{/assets/js/plugins/countdown.min.js}"></script>
+    <!-- Nice Select JS -->
+    <script th:src="@{/assets/js/plugins/nice-select.min.js}"></script>
+    <!-- jquery UI JS -->
+    <script th:src="@{/assets/js/plugins/jqueryui.min.js}"></script>
+    <!-- Image zoom JS -->
+    <script th:src="@{/assets/js/plugins/image-zoom.min.js}"></script>
+    <!-- Images loaded JS -->
+    <script th:src="@{/assets/js/plugins/imagesloaded.pkgd.min.js}"></script>
+    <!-- mail-chimp active js -->
+    <script th:src="@{/assets/js/plugins/ajaxchimp.js}"></script>
+    <!-- contact form dynamic js -->
+    <script th:src="@{/assets/js/plugins/ajax-mail.js}"></script>
+    <!-- google map api -->
+    <!-- <script th:src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfmCVTjRI007pC1Yk2o2d_EhgkjTsFVN8"></script> -->
+    <!-- google map active js -->
+    <script th:src="@{/assets/js/plugins/google-map.js}"></script>
+    <!-- Main JS -->
+    <script th:src="@{/assets/js/main.js}"></script>
+    <script th:src="@{/assets/js/scripthome.js}"></script>
+    <script>
+        $("#form-register").submit(function(e) {
+            e.preventDefault(); // Ngăn gửi form mặc định
+        
+            let form = $(this);
+        
+            // Xóa hết lỗi cũ
+            $(".text-danger").text("");
+        
+            $.ajax({
+                type: "POST",
+                url: "/register/checkregister", // ⬅️ Đúng endpoint trong @PostMapping
+                data: form.serialize(),
+                success: function() {
+                    alert("🎉 Đăng ký thành công! Mời bạn đăng nhập.");
+                    window.location.href = "/login";
+                },
+                error: function(xhr) {
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        let errors = xhr.responseJSON.errors;
+                        for (let field in errors) {
+                            $(`[data-error="${field}"]`).text(errors[field]);
+                        }
+                    } else {
+                        alert("Đã có lỗi xảy ra. Vui lòng thử lại!");
+                    }
+                }
+            });
+        });
+        
+
+    </script>
+</body>
+
+
+<!-- Mirrored from htmldemo.net/corano/corano/login-register.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 29 Jun 2024 09:54:01 GMT -->
+
+</html>

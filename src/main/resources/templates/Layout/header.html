@@ -56,7 +56,10 @@
                             <div class="header-configure-area">
                                 <ul class="nav justify-content-end">
                                     <li class="user-hover">
-                                        <a href="">
+                                        <a th:if="${session.taikhoan == null}" th:href="@{/login}">
+                                            <i class="pe-7s-user"></i>
+                                        </a>
+                                        <a th:unless="${session.taikhoan == null}"  th:href="@{/info-Acc(id=${session.taikhoan.id})}">
                                             <i class="pe-7s-user"></i>
                                         </a>
                                         <ul class="dropdown-list">
@@ -69,7 +72,7 @@
                                                 <!-- Kiểm tra nếu có tài khoản user -->
                                                 <th:block th:if="${session.taikhoan != null}">
                                                     <p><span style="font-weight: 600;">Acc: </span>
-                                                        <a style="font-size: 11px;" th:href="@{'/info-Acc?id=' + ${session.taikhoan.Name}}"
+                                                        <a style="font-size: 11px;" th:href="@{'/info-Acc?id=' + ${session.taikhoan.getId()}}"
                                                             th:text="${session.taikhoan.Name}"></a>
                                                     </p>
                                                     <br>
@@ -127,7 +130,7 @@
                 <div class="col-12">
                     <div class="mobile-main-header">
                         <div class="mobile-logo">
-                            <a href=" BASE_URL ">
+                            <a th:href="@{/}">
                                 <img th:src="@{/assets/img/logo/logo-bad-cut-removebg.png}" alt="Brand Logo">
                             </a>
                         </div>
@@ -165,7 +168,7 @@
                                                             Đăng xuất
                                                         </a>
                                                     </span> <br> <br>
-                                                    <span><a style="font-size: 14px;" th:href="@{admin}">Quay lại admin</a></span>
+                                                    <span><a style="font-size: 14px;" th:href="@{/admin}">Quay lại admin</a></span>
                                                 </th:block>
                                             
                                                 <!-- Nếu chưa đăng nhập -->
@@ -181,7 +184,7 @@
                                 </ul>
                             </div>
                             <div class="mini-cart-wrap">
-                                <a href="cart.html">
+                                <a th:href="@{/cart}">
                                     <i class="pe-7s-shopbag"></i>
                                     <div class="notification">0</div>
                                 </a>
@@ -227,12 +230,12 @@
                     <nav>
                         <ul class="mobile-menu">
                             <li class="menu-item-has-children"><a
-                                    href=" BASE_URL ">Trang
+                                th:href="@{/}">Trang
                                     chủ</a>
                             </li>
                              <!-- foreach ($listCategory as $category)  -->
                             <li class="menu-item-has-children "><a
-                                    href="act=san-pham-theo-danh-muc&id='.$category['dm_id'] "> $category['ten_dm'] </a>
+                                    href=""> </a>
                             </li>
                             
                             <li><a

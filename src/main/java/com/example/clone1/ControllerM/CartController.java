@@ -22,8 +22,6 @@ import jakarta.servlet.http.HttpSession;
 public class CartController {
     @Autowired
     private ProductDAO productDAO;
-    @Autowired
-    private UserDAO usersDAO;
 
     @GetMapping
     public String viewCart(Model model, HttpSession session) {

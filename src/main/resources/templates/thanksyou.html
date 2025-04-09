@@ -35,20 +35,20 @@
                 <div class="info-row">
                     <div class="info-section">
                         <h2>Thông tin mua hàng</h2>
-                        <div id="name-user" th:text="${userss.getName()}">adawd</div>
-                        <div id="phone-user" th:text="${userss.getPhonenumber()}">+84969553611</div>
+                        <div id="name-user" th:text="${userss.getName() ==null ? 'NULL':userss.getName()}">adawd</div>
+                        <div id="phone-user" th:text="${userss.getPhonenumber() == null  ? 'NULL': userss.getPhonenumber()}">+84969553611</div>
                     </div>
                     <div class="info-section">
                         <h2>Địa chỉ nhận hàng</h2>
-                        <div id="address" th:text="${userss.getAddress()}">adawd</div>
-                        <div th:text="${userss.getAddress()}">Phường Lê Lợi, Thị xã Sơn Tây, Hà Nội</div>
-                        <div id="phonesss" th:text="${userss.getPhonenumber()}">+84969553611</div>
+                        <div id="address" th:text="${userss.getAddress() ==null  ? 'NULL': userss.getAddress()}">adawd</div>
+                        <div th:text="${userss.getAddress() ==null  ? 'NULL': userss.getAddress()}">Phường Lê Lợi, Thị xã Sơn Tây, Hà Nội</div>
+                        <div id="phonesss" th:text="${userss.getPhonenumber()==null  ? 'NULL': userss.getPhonenumber()}">+84969553611</div>
                     </div>
                 </div>
                 <div class="info-row">
                     <div class="info-section">
                         <h2>Phương thức thanh toán</h2>
-                        <div th:text="${notification}">Thanh toán khi giao hàng</div>
+                        <div th:text="${notification ==null  ? 'NULL': notification}">Thanh toán khi giao hàng</div>
                     </div>
 
                     <div class="info-section">

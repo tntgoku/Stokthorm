@@ -43,16 +43,14 @@
 
 
     <main>
-    <div class="breadcrumb-area">
+        <div class="breadcrumb-area">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="breadcrumb-wrap">
                             <nav aria-label="breadcrumb">
                                 <ul class="breadcrumb">
-                                    <li class="breadcrumb-item"><a
-                                            href="<?= BASE_URL?>"><i
-                                                class="fa fa-home"></i></a></li>
+                                    <li class="breadcrumb-item"><a th:href="@{/}"><i class="fa fa-home"></i></a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Lịch sử đơn hàng</li>
                                 </ul>
                             </nav>
@@ -61,13 +59,14 @@
                 </div>
             </div>
         </div>
+    
         <div class="container">
             <div class="member-area-from-wrap">
                 <div class="row justify-content-center">
-                    <!-- Login Content Start -->
-                    <div class="col-lg-12 ">
+                    <div class="col-lg-12">
                         <div class="card-body">
-                        <?php if (!empty($orders)): ?>
+    
+                            <div th:if="${orders != null and !orders.isEmpty()}">
                                 <table class="table table-bordered table-striped" style="text-align:center;">
                                     <thead>
                                         <tr>
@@ -80,52 +79,46 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-    <?php foreach ($orders as $order): ?>
-        <tr>
-            <td>#ĐH<?= $order['order_id'] ?></td>
-            <td><?= $order['tong_so_luong'] ?></td>
-            <td><?= number_format($order['tong_tien']) ?>₫</td>
-            <td><?= date('d/m/Y H:i', strtotime($order['ngay_dat'])) ?></td>
-            <td>
-                <?php if($order['trang_thai'] == 1){
-                    echo '<p class="alert alert-info">Chờ xác nhận</p>';
-                } elseif($order['trang_thai'] == 2) {
-                    echo '<p class="alert alert-warning">Đang giao hàng</p>';
-                } elseif($order['trang_thai'] == 3) {
-                    echo '<p class="alert alert-success">Đã giao hàng</p>';
-                } else {
-                    echo '<p class="alert alert-danger">Đã hủy</p>';
-                } ?>
-            </td>
-            <td>
-                <?php if ($order['trang_thai'] == 3) { ?>
-                    <?php if ($allRatedStatus[$order['order_id']]) { ?>
-                        <a href="<?= BASE_URL.'?act=chi-tiet-don-hang&id='.$order['order_id'] ?>" class="btn btn-primary">Xem Chi Tiết</a>
-                    <?php } else { ?>
-                        <a href="<?= BASE_URL.'?act=danh-gia&tk_id='.$tk_id.'&order_id='.$order['order_id'] ?>" class="btn btn-warning mt-1">Đánh Giá</a>
-                    <?php } ?>
-                <?php }else{ ?>
-                    <a href="<?= BASE_URL.'?act=chi-tiet-don-hang&id='.$order['order_id'] ?>" class="btn btn-primary">Xem Chi Tiết</a>
-                <?php } ?>
-            </td>
-        </tr>
-    <?php endforeach; ?>
+                                        <tr th:each="order : ${orders}">
+                                            <td th:text="'#ĐH' + ${order.getOrderId()}"></td>
+                                            <td th:text="${order.getCartItems().size()}"></td>
+                                            <td th:text="${#numbers.formatInteger(order.getTotalAmount(), 3, 'COMMA')} + '₫'"></td>
+                                            <td th:text="${order.getOrderDate()}"></td>
+                                            <td>
+                                                <p th:if="${order.getStatus() == 'Pending'}" class="alert alert-info">Chờ xác nhận</p>
+                                                <p th:if="${order.getStatus() == 'Shipped'}" class="alert alert-warning">Đang giao hàng</p>
+                                                <p th:if="${order.getStatus() == 'Delivered'}" class="alert alert-success">Đã giao hàng</p>
+                                                <p th:if="${order.getStatus() != 'Pending' and order.getStatus() != 'Shipped' and order.getStatus() != 'Delivered'}" class="alert alert-danger">Đã hủy</p>
+                                            </td>
+                                            <td>
+                                                <div th:if="${order.getStatus() == 'Delivered'}">
+                                                    <a
+                                                       th:href="@{'/orders/chi-tiet-don-hang?id=' + ${order.getOrderId()}}"
+                                                       class="btn btn-primary">Xem Chi Tiết</a>
+                                                    <a 
+                                                       th:href="@{'/orders/danh-gia?tk_id=' + ${tk_id} + '&order_id=' + ${order.getOrderId()}}"
+                                                       class="btn btn-warning mt-1">Đánh Giá</a>
+                                                </div>
+                                                <a th:if="${order.getStatus() != 'Delivered'}"
+                                                   th:href="@{'/orders/chi-tiet-don-hang?id=' + ${order.getOrderId()}}"
+                                                   class="btn btn-primary">Xem Chi Tiết</a>
+                                            </td>
+                                        </tr>
                                     </tbody>
-
                                 </table>
-                            <?php else: ?>
-                                <div style="text-align: center; margin: 20px; font-size: 1.5rem; font-weight: bold;">
-                                    Bạn chưa có đơn hàng nào.
-                                </div>
-                            <?php endif; ?>
-                        </div>
-
+                            </div>
+    
+                            <div th:if="${orders == null or orders.isEmpty()}" style="text-align: center; margin: 20px; font-size: 1.5rem; font-weight: bold;">
+                                Bạn chưa có đơn hàng nào.
+                            </div>
+    
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+    
 
 
     <!-- Scroll to top start -->
@@ -172,7 +165,7 @@
     <!-- google map api -->
     <!-- <script th:src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfmCVTjRI007pC1Yk2o2d_EhgkjTsFVN8"></script> -->
     <!-- google map active js -->
-    <script th:src="@{assets/js/plugins/google-map.js}"></script>
+    <script th:src="@{/assets/js/plugins/google-map.js}"></script>
     <!-- Main JS -->
     <script th:src="@{assets/js/main.js}"></script>
 </body>

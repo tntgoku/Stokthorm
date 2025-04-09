@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.example.clone1.Model.*;
@@ -22,6 +23,8 @@ public class OrderDAO {
      */
     @Autowired
     private JdbcTemplate template;
+    @Autowired
+    private ProductDAO productDAO;
 
     // Ví dụ về phương thức để tạo đơn hàng
     public int createOrder(Order order) {
@@ -169,30 +172,39 @@ public class OrderDAO {
     // Phương thức để lấy tất cả các đơn hàng
     public List<Order> getAllOrders() {
         String sql = "SELECT * FROM Orders";
-        return template.query(sql, (rs, rowNum) -> {
-            Order order = new Order();
-            order.setOrderId(rs.getString("OrderID"));
-            order.setUserId(rs.getString("UserID"));
-            order.setOrderDate(rs.getString("OrderDate"));
-            order.setNote(rs.getString("Note"));
-            order.setTotalAmount(rs.getDouble("TotalAmount"));
-            order.setStatus(rs.getString("Status"));
-            // Add logic to retrieve cart items if needed
-            return order;
-        });
+        try {
+            return template.query(sql, (rs, rowNum) -> {
+                Order order = new Order();
+                order.setOrderId(rs.getString("OrderID"));
+                order.setUserId(rs.getString("UserID"));
+                order.setOrderDate(rs.getString("OrderDate"));
+                order.setNote(rs.getString("Note"));
+                order.setShippingFee(rs.getFloat("ShippingFee"));
+                order.setPaymentMethod(rs.getString("PaymentMethod"));
+                order.setStatuspayment(rs.getString("PaymentStatus"));
+                order.setTotalAmount(rs.getDouble("TotalAmount"));
+                order.setStatus(rs.getString("Status"));
+                // Add logic to retrieve cart items if needed
+                return order;
+            });
+        } catch (Exception e) {
+            // Ghi log nếu cần
+            return new ArrayList<>();
+        }
     }
 
     // Phương thức để lấy tất cả các sản phẩm trong giỏ hàng theo ID đơn hàng
     public List<CartItem> getCartItemsByOrderId(String orderId) {
         String sqlString = "SELECT * FROM OrderDetails WHERE OrderID = ?";
-        return template.query(sqlString, new Object[] { orderId }, (rs, rowNum) -> {
+        return template.query(sqlString, (rs, rowNum) -> {
             CartItem cartItem = new CartItem();
             cartItem.setIDItem(rs.getString("ProductID"));
             cartItem.setQuantity(rs.getInt("Quantity"));
             cartItem.setGiasp(rs.getDouble("Price") * rs.getInt("Quantity"));
+            cartItem.setItem(productDAO.FindProduct1(rs.getString("ProductID")));
             // Add logic to retrieve other fields if needed
             return cartItem;
-        });
+        }, orderId);
     }
 
     // Phương thức để lấy đơn hàng theo ID
@@ -201,21 +213,71 @@ public class OrderDAO {
         String sql = "SELECT * FROM Orders WHERE OrderID = ?";
 
         try {
-            return template.queryForObject(sql, new Object[] { orderId }, (rs, rowNum) -> {
-                Order order = new Order();
-                order.setOrderId(rs.getString("OrderID"));
-                order.setUserId(rs.getString("UserID"));
-                order.setOrderDate(rs.getString("OrderDate"));
-                order.setNote(rs.getString("Note"));
-                order.setTotalAmount(rs.getDouble("TotalAmount"));
-                order.setStatus(rs.getString("Status"));
-                // Add logic to retrieve cart items if needed
-                return order;
-            });
-        } catch (EmptyResultDataAccessException e) {
-            // Handle case where no result is found, return null or a default value
-            System.out.println("Order not found for OrderID: " + orderId);
-            return null; // or throw a custom exception
+            return template.queryForObject(sql, (rs, rowNum) -> {
+                Order ordertemp = new Order();
+                ordertemp.setOrderId(rs.getString("OrderID"));
+                ordertemp.setUserId(rs.getString("UserID"));
+                ordertemp.setOrderDate(rs.getString("OrderDate"));
+                ordertemp.setNote(rs.getString("Note"));
+                ordertemp.setShippingFee(rs.getFloat("ShippingFee"));
+                ordertemp.setPaymentMethod(rs.getString("PaymentMethod"));
+                ordertemp.setStatuspayment(rs.getString("PaymentStatus"));
+                ordertemp.setTotalAmount(rs.getDouble("TotalAmount"));
+                ordertemp.setStatus(rs.getString("Status"));
+                ordertemp.setCartItems(getCartItemsByOrderId(orderId));
+                for (CartItem item : ordertemp.getCartItems()) {
+                    Product temp = productDAO.getProduct(item.getIDItem1()) != null
+                            ? productDAO.getProduct(item.getIDItem1())
+                            : null;
+                    if (temp != null) {
+                        item.setItem(temp);
+                        item.getItem().setListIMG(productDAO.getListIMG(temp));
+                    }
+                }
+                return ordertemp;
+            }, orderId);
+        } catch (Exception e) {
+            // Ghi log nếu cần
+            return null;
+        }
+    }
+
+    public List<Order> getAllOrderbyUserID(String idUser) {
+        String sql = "SELECT * FROM Orders WHERE UserID = ?";
+        try {
+            return template.query(sql, (rs, rowNum) -> {
+                Order ordertemp = new Order();
+                ordertemp.setOrderId(rs.getString("OrderID"));
+                ordertemp.setUserId(rs.getString("UserID"));
+                // Nên đổi kiểu nếu cột là DATETIME
+                ordertemp.setOrderDate(rs.getString("OrderDate"));
+                ordertemp.setNote(rs.getString("Note"));
+                ordertemp.setShippingFee(rs.getFloat("ShippingFee"));
+                ordertemp.setPaymentMethod(rs.getString("PaymentMethod"));
+                ordertemp.setStatuspayment(rs.getString("PaymentStatus"));
+                ordertemp.setTotalAmount(rs.getDouble("TotalAmount"));
+                ordertemp.setStatus(rs.getString("Status"));
+
+                List<CartItem> items = getCartItemsByOrderId(ordertemp.getOrderId());
+                if (items == null) {
+                    items = new ArrayList<>();
+                }
+                System.out.println(items.toString());
+                for (CartItem item : items) {
+
+                    Product temp = productDAO.getProduct(item.getIDItem1());
+                    if (temp != null) {
+                        item.setItem(temp);
+                        temp.setListIMG(productDAO.getListIMG(temp));
+                    }
+                }
+                ordertemp.setCartItems(items);
+                System.out.println(ordertemp.toString());
+                return ordertemp;
+            }, idUser);
+        } catch (Exception e) {
+            e.printStackTrace(); // hoặc log lỗi
+            return new ArrayList<>();
         }
     }
 

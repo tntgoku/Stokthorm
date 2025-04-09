@@ -12,9 +12,24 @@ public class Order {
     private String status;
     private String Statuspayment;
     private double totalAmount;
+    private double ShippingFee;
     private List<CartItem> cartItems; // Danh sách sản phẩm trong đơn hàng
 
     public Order() {
+    }
+
+    public Order(String orderId, String userId, String OrderDate, String Note, String PaymentMethod, String status,
+            String Statuspayment, double totalAmount, double ShippingFee, List<CartItem> cartItems) {
+        this.orderId = orderId;
+        this.userId = userId;
+        this.OrderDate = OrderDate;
+        this.Note = Note;
+        this.PaymentMethod = PaymentMethod;
+        this.status = status;
+        this.Statuspayment = Statuspayment;
+        this.totalAmount = totalAmount;
+        this.ShippingFee = ShippingFee;
+        this.cartItems = cartItems;
     }
 
     // Không có ID đơn hàng
@@ -39,6 +54,14 @@ public class Order {
         this.status = status;
         this.totalAmount = totalAmount;
         this.cartItems = cartItems;
+    }
+
+    public double getShippingFee() {
+        return this.ShippingFee;
+    }
+
+    public void setShippingFee(double shippingFee) {
+        this.ShippingFee = shippingFee;
     }
 
     public String getStatuspayment() {

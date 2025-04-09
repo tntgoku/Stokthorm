@@ -41,7 +41,6 @@
   <header  th:replace="~{Layout/header}"></header>
   <!-- end Header Area -->
 
-
   <main>
     <div class="breadcrumb-area">
       <div class="container">
@@ -50,9 +49,9 @@
             <div class="breadcrumb-wrap">
               <nav aria-label="breadcrumb">
                 <ul class="breadcrumb">
-                  <li class="breadcrumb-item"><a
-                      href="<?= BASE_URL?>"><i
-                        class="fa fa-home"></i></a></li>
+                  <li class="breadcrumb-item">
+                    <a th:href="@{/}"><i class="fa fa-home"></i></a>
+                  </li>
                   <li class="breadcrumb-item active" aria-current="page">Chi tiết đơn hàng</li>
                 </ul>
               </nav>
@@ -61,44 +60,32 @@
         </div>
       </div>
     </div>
+  
     <div class="content-wrapper">
-
-      <!-- Main content -->
       <section class="content">
         <div class="container">
           <div class="container-fluid">
             <div class="row">
               <div class="col-12">
-                <?php
-                if ($detailDonHang['trang_thai'] == 1) {
-                    $colorAlert = 'info'; // chờ xác nhận
-                } elseif ($detailDonHang['trang_thai'] == 2) {
-                    $colorAlert = 'warning'; // đang giao
-                } elseif ($detailDonHang['trang_thai'] == 3) {
-                    $colorAlert = 'success'; // đã giao
-                } else {
-                    $colorAlert = 'danger'; // đã hủy
-                }
-  ?>
-                <div class="alert alert-<?=$colorAlert?>"
-                  role="alert">
-                  <?php
-    if ($detailDonHang['trang_thai'] == 1) {
-        echo'Trạng thái đơn hàng: Chờ xác nhận';
-    } elseif ($detailDonHang['trang_thai'] == 2) {
-        echo'Trạng thái đơn hàng: Đang giao';
-    } elseif ($detailDonHang['trang_thai'] == 3) {
-        echo'Trạng thái đơn hàng: Đã giao';
-    } else {
-        echo'Trạng thái đơn hàng: Hủy đơn';
-    }
-  ?>
+                <!-- Hiển thị trạng thái đơn hàng -->
+                <div class="alert"
+                    th:classappend="
+                      ${order.status} == 'Pending' ? ' alert-info' :
+                      (${order.status} == 'Shipped' ? ' alert-warning' :
+                      (${order.status} == 'Delivered' ? ' alert-success' : ' alert-danger'))"
+                    role="alert">
+                  <span th:switch="${order.status}">
+                    <span th:case="'Pending'">Trạng thái đơn hàng: Chờ xác nhận</span>
+                    <span th:case="'Shipped'">Trạng thái đơn hàng: Đang giao</span>
+                    <span th:case="'Delivered'">Trạng thái đơn hàng: Đã giao</span>
+                    <span th:case="'Cancelled'">Trạng thái đơn hàng: Hủy đơn</span>
+                    <span th:case="*">Trạng thái đơn hàng: Không xác định</span>
+                  </span>
                 </div>
 
-
-                <!-- Main content -->
+  
+                <!-- Nội dung chi tiết đơn hàng -->
                 <div class="invoice p-3 mb-3">
-                  <!-- Table row -->
                   <div class="row">
                     <div class="col-12 table-responsive">
                       <table class="table table-striped">
@@ -107,48 +94,38 @@
                             <th>Ảnh sản phẩm</th>
                             <th>Tên sản phẩm</th>
                             <th>Size</th>
+                            <th>Màu</th>
                             <th>Giá mua</th>
                             <th>Số lượng</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <?php
-        //  var_dump($productDonHang);  
-        foreach ($productDonHang as $sanpham) { ?>
-                          <tr>
+                          <tr th:each="sanpham : ${productDonHang}">
                             <td>
-                              <img style="max-width:130px" src="<?= $sanpham['img_sp']?>" alt="Ảnh sp">
+                              <img style="max-width:130px"
+                            th:src="${(sanpham.getItem().getListIMG() != null and not sanpham.getItem().getListIMG().isEmpty()) ? sanpham.getItem().getListIMG().get(0) : '/images/no-image.png'}"
+                                alt="Ảnh sản phẩm">
                             </td>
-                            <td>
-                              <?= $sanpham['ten_sp'] ?>
-                            </td>
-                            <td>
-                              <?= $sanpham['size_value'] ?>
-                            </td>
-                            <td>
-                              <?= number_format($sanpham['gia_mua']) ?>
-                              VNĐ</td>
-                            <td>
-                              <?= $sanpham['so_luong_mua'] ?>
-                            </td>
+                            <td th:text="${sanpham.getItem().getName()}">Tên sản phẩm</td>
+                            <td th:text="${sanpham.getItem().getSize()}">Size</td>
+                            <td th:text="${sanpham.getItem().getColor()}">Size</td>
+                            <td th:text="${#numbers.formatDecimal(sanpham.getItem().getPrice() - (sanpham.getItem().getPrice()*(sanpham.getItem().getDiscount()/100)), 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">Giá mua</td>
+                            <td th:text="${sanpham.getQuantity()}">Số lượng</td>
                           </tr>
-                          <?php }; ?>
                         </tbody>
                       </table>
-                    </div>
-                    <!-- /.col -->
+                    </div> <!-- /.col -->
                   </div>
-                  
-                </div>
-                <!-- /.invoice -->
-              </div><!-- /.col -->
-            </div><!-- /.row -->
+                </div> <!-- /.invoice -->
+  
+              </div> <!-- /.col -->
+            </div> <!-- /.row -->
           </div>
         </div>
       </section>
-
     </div>
   </main>
+  
 
 
     <!-- Scroll to top start -->
@@ -195,9 +172,9 @@
     <!-- google map api -->
     <!-- <script th:src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfmCVTjRI007pC1Yk2o2d_EhgkjTsFVN8"></script> -->
     <!-- google map active js -->
-    <script th:src="@{assets/js/plugins/google-map.js}"></script>
+    <script th:src="@{/assets/js/plugins/google-map.js}"></script>
     <!-- Main JS -->
-    <script th:src="@{assets/js/main.js}"></script>
+    <script th:src="@{/assets/js/main.js}"></script>
 </body>
 
 

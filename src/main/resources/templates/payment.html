@@ -78,13 +78,13 @@
                                     <div class="single-input-item">
                                         <label for="ho_ten">Họ và tên</label>
                                         <input type="text" placeholder="Tên đăng nhập" name="ho_ten"
-                                            th:value="${taikhoan==null ? '' : taikhoan.ho_ten}"
+                                            th:value="${taikhoan==null ? '' : taikhoan.getName()}"
                                             readonly>
                                     </div>
                                     <div class="single-input-item">
                                         <label for="email">Email</label>
                                         <input type="email" placeholder="email@gmail.com" name="email"
-                                            th:value="${taikhoan==null ? '' : taikhoan.email}"
+                                            th:value="${taikhoan==null ? '' : taikhoan.getEmail()}"
                                             readonly>
 
                                     </div>
@@ -113,13 +113,13 @@
                                         </div>
                                         <div class="ship-to-different single-form-row">
                                             <div class="single-input-item">
-                                                <input type="text" placeholder="Tên người nhận" name="ten_nhan" value="">
+                                                <input type="text" placeholder="Tên người nhận" name="ten_nhan"  th:value="${taikhoan==null ? '' : taikhoan.getName()}">
                                             </div>
                                             <div class="single-input-item">
-                                                <input type="text" placeholder="Số điện thoại người nhận" name="sdt_nhan" value="">
+                                                <input type="text" placeholder="Số điện thoại người nhận" name="sdt_nhan"   th:value="${taikhoan==null ? '' : taikhoan.getPhonenumber()==null ? '' : taikhoan.getPhonenumber()}">
                                             </div>
                                             <div class="single-input-item">
-                                                <input type="text" placeholder="Địa chỉ người nhận" name="dia_chi_nhan" value="">
+                                                <input type="text" placeholder="Địa chỉ người nhận" name="dia_chi_nhan" th:value="${taikhoan==null ? '' : taikhoan.getAddress()==null ? '' : taikhoan.getAddress()}">
                                             </div>
                                         </div>
                                     </div>

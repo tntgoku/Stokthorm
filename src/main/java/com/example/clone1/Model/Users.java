@@ -9,6 +9,13 @@ public class Users {
     private int totalBuy;
 
     public Users() {
+        this.Role = "Customer";
+    }
+
+    public boolean isCheckPassword() {
+        if (Password == null || Mat_khau == null)
+            return true;
+        return Password.equals(Mat_khau);
     }
 
     public Users(String id, String name, String email, String matkhau, String phonenumber, String address,
@@ -113,7 +120,7 @@ public class Users {
     }
 
     public String getPhonenumber() {
-        return this.Phonenumber == null ? "NULL" : this.Phonenumber;
+        return this.Phonenumber;
     }
 
     public void setPhonenumber(String Phonenumber) {
@@ -121,7 +128,7 @@ public class Users {
     }
 
     public String getAddress() {
-        return this.Address == null ? "NULL" : this.Address;
+        return this.Address;
     }
 
     public void setAddress(String Address) {

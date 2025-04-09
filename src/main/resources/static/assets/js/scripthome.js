@@ -43,6 +43,11 @@ $(document).ready(function() {
     });
 });
 
+
+
+
+
+
 // Hàm xác nhận đăng xuất
 function confirmLogout(event) {
     event.preventDefault(); // Ngăn chặn hành vi mặc định của thẻ
@@ -54,4 +59,7 @@ function confirmLogout(event) {
             contentType: "application/json",
         });
     }
+
+
+
 }

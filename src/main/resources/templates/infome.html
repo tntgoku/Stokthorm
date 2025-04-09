@@ -74,27 +74,28 @@
                         <div class="single-input-item">
                             <label for="email">Email</label>
                             <input type="email" placeholder="email@gmail.com" name="email"
-                                th:value="${taikhoan.getName()}"
+                                th:value="${taikhoan.getEmail()}"
                                 readonly>
 
                         </div>
                         <div class="single-input-item">
                             <label for="mat_khau">Mật khẩu</label>
                             <input type="password" placeholder="email@gmail.com" name="mat_khau"
-                                th:value="${taikhoan.getName()}"
+                                th:value="${taikhoan.getPassword()}"
                                 readonly>
 
                         </div>
                         <div class="single-input-item">
                             <label for="sdt">Số điện thoại</label>
                             <input type="text" placeholder="Số điện thoại" name="sdt"
-                                value="${taikhoan.getPhonenumber()==null ? 'Chưa có số điện thoại' : taikhoan.getPhonenumber()}"
+                            th:value="${taikhoan.getPhonenumber()==null ? 'Chưa có số điện thoại' : taikhoan.getPhonenumber()}"
                                 readonly>
                         </div>
                         <div class="single-input-item">
                             <label for="dia_chi">Địa chỉ nơi trốn</label>
                             <input type="text" placeholder="Địa chỉ nơi trốn" name="dia_chi"
-                                value=" ${taikhoan.getAddress()==null ? 'Chưa có địa chỉ' : taikhoan.getAddress()}"
+                            th:value="${taikhoan.address == null ? 'Chưa có địa chỉ' : taikhoan.address}"
+
                                 readonly>
                         </div>
 
@@ -106,7 +107,7 @@
                                     <label class="custom-control-label" for="ship_to_different">Sửa thông tin?</label>
                                 </div>
                             </div>
-                            <form th:action="@{/infor/change}" method="post">
+                            <form th:action="@{/change}" method="post">
                                 <div class="ship-to-different single-form-row">
                                     <div class="billing-form-wrap mt-3">
                                         <div class="single-input-item">
@@ -123,8 +124,8 @@
                                         </div>
                                         <div class="single-input-item">
                                             <label for="mat_khau">Mật khẩu</label>
-                                            <input type="text" placeholder="email@gmail.com" name="mat_khau"
-                                                value="<?= $TKById['mat_khau'] ?>">
+                                            <input type="text" placeholder="******" name="mat_khau"
+                                                th:value="${taikhoan.getPassword()}">
 
                                         </div>
                                         <div class="single-input-item">
@@ -202,9 +203,9 @@
     <!-- google map api -->
     <!-- <script th:src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfmCVTjRI007pC1Yk2o2d_EhgkjTsFVN8"></script> -->
     <!-- google map active js -->
-    <script th:src="@{assets/js/plugins/google-map.js}"></script>
+    <script th:src="@{/assets/js/plugins/google-map.js}"></script>
     <!-- Main JS -->
-    <script th:src="@{assets/js/main.js}"></script>
+    <script th:src="@{/assets/js/main.js}"></script>
 </body>
 
 

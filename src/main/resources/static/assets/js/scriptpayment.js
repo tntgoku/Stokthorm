@@ -57,9 +57,27 @@ $(document).ready(function() {
 
     $('#checkpayment').submit(function(e) {
         e.preventDefault();
-        var ten, sdt, diaChi;
+        var ten, sdt, diachi;
         let selectedMethod = $('input[name="paymentmethod"]:checked').val();
+        let selected = $('#ship_to_different');
+        if (selected.is(':checked')) {
+            ten = $('input[name="ten_nhan"]').val();
+            sdt = $('input[name="sdt_nhan"]').val();
+            diachi = $('input[name="dia_chi_nhan"]').val();
+            alert('Bạn đã chọn gửi đến địa chỉ khác!' + ten + ", " + sdt + ", " + diachi);
+        } else {
+            ten = $('input[name="ho_ten"]').val();
+            sdt = $('input[name="sdt"]').val();
+            diachi = $('input[name="dia_chi"]').val();
+            alert('Bạn đã bỏ chọn gửi đến địa chỉ khác.' + ten + ", " + sdt + ", " + diachi);
+        }
+        if (!ten && !sdt && !diachi) { alert("Vui lòng điền đầy đủ thông tin người nhận (Tên, SĐT, Địa chỉ)."); return; }
 
+        if (!ten) { alert("Vui lòng nhập Tên"); return; }
+
+        if (!sdt) { alert("Vui lòng nhập  SĐT."); return; }
+
+        if (!diachi) { alert("Vui lòng nhập  Địa chỉ."); return; }
         $.ajax({
             type: "POST",
             url: "/payment/checkpayment",
@@ -67,17 +85,13 @@ $(document).ready(function() {
             data: JSON.stringify({
                 ten: ten,
                 sdt: sdt,
-                diaChi: diaChi,
+                diaChi: diachi,
                 method: selectedMethod // key này phải là "method" để khớp với backend
             }),
             dataType: "text", // vì backend trả về chuỗi "/thanksyou" hoặc "/payment"
             success: function(response) {
                 console.log("Phản hồi từ server:", response);
-                if (response === "/payment/thanksyou") {
-                    window.location.href = response;
-                } else {
-
-                }
+                window.location.href = response;
             },
             error: function(xhr, status, error) {
                 alert("Đã xảy ra lỗi");
@@ -91,26 +105,18 @@ $(document).ready(function() {
     //         console.log("Checkbox đã được bật (checked)");
     //         ten = $('input[name="ten_nhan"]').val();
     //         sdt = $('input[name="sdt_nhan"]').val();
-    //         diaChi = $('input[name="dia_chi_nhan"]').val();
-    //         console.log(ten + ", " + sdt + ", " + diaChi);
+    //         diachi = $('input[name="dia_chi_nhan"]').val();
+    //         console.log(ten + ", " + sdt + ", " + diachi);
     //         // Thêm hành động khi bật
     //     } else {
     //         console.log("Checkbox đã được tắt");
     //         console.log("Checkbox đã được tắt (unchecked)");
     //         ten = $('input[name="ho_ten"]').val();
     //         sdt = $('input[name="sdt"]').val();
-    //         diaChi = $('input[name="dia_chi"]').val();
+    //         diachi = $('input[name="dia_chi"]').val();
     //         // Thêm hành động khi tắt
-    //         console.log(ten + ", " + sdt + ", " + diaChi);
+    //         console.log(ten + ", " + sdt + ", " + diachi);
     //     }
     // });
-    $('#ship_to_different').change(function() {
-        if ($(this).is(':checked')) {
-            alert('Bạn đã chọn gửi đến địa chỉ khác!');
-            // $('#another-address').show();
-        } else {
-            alert('Bạn đã bỏ chọn gửi đến địa chỉ khác.');
-            // $('#another-address').hide();
-        }
-    });
+
 });

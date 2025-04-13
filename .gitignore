@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+### thumuctest ###
+**/src/main/java/com/example/clone1/thucmuctest

@@ -45,20 +45,6 @@ $(document).ready(function() {
 
 
 
-// $("#add-product").submit(function(e) {
-//     const selectedValue = $(".form-selectcategori").val();
-//     const selectedText = $(".form-selectcategori option:selected").text();
-
-//     console.log("Đã chọn danh mục ID:", selectedValue);
-//     console.log("Tên danh mục:", selectedText);
-//     e.preventDefault();
-//     // $.ajax({
-//     //     type: "POST",
-//     //     url: "/admin/listproduct/act/formAddProduct",
-
-//     // })
-
-// });
 $(".form-selectcategori option").on("change", function() {
     const selectedValue = $(this).val(); // Lấy giá trị (value) của option được chọn
     const selectedText = $(this).find("option:selected").text(); // Lấy text hiển thị

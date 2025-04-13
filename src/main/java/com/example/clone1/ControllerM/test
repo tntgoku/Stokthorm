@@ -55,7 +55,7 @@
         return paymentStatus == 1 ? "thanksyouonline" : "orderfail"; // trả về trang view thankyou.html hoặc .jsp
     }
 no nam o day ne adadadd
-
+awdawdawd them vao o day thay doi tu a -z
 awd
 awdda
 wd

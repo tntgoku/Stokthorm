@@ -52,7 +52,7 @@
             userDAO.createUser(user);
         }
 
-        return paymentStatus == 1 ? "thanksyouonline" : "orderfail"; // trả về trang view thankyou.html hoặc .jsp
+        return paymentStatus == 1 ? "thanksyouonline" : "orderfail"; 
     }
     awdawdawdawdawdawdawdawdawdawdawdawdsdasdasdasd
     dawdada

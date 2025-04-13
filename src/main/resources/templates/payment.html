@@ -1,11 +1,11 @@
 <!doctype html>
-<html class="no-js" lang="zxx">
+<html class="no-js" lang="en"  xmlns:th="http://www.thymeleaf.org">
 
 
 <!-- Mirrored from htmldemo.net/corano/corano/login-register.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 29 Jun 2024 09:54:01 GMT -->
 
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Giỏ hàng</title>
     <meta name="robots" content="noindex, follow" />
@@ -150,12 +150,16 @@
                                                     <td th:text="${itemcart.getItem().getName()}"></td>
                                                     <td th:text="${itemcart.getQuantity}"></td>
                                                     <td th:text="${itemcart.getItem().getSize()}"></td>
-                                                    <td th:text="${itemcart.getItem().getPrice()-
-                                                    (
-                                                    itemcart.getItem().getPrice() * (itemcart.getItem().getDiscount()/100) )}+'₫'"></td>
-                                                    <td th:text="${(itemcart.getItem().getPrice()-
-                                                    (
-                                                    itemcart.getItem().getPrice() * (itemcart.getItem().getDiscount()/100) ))*itemcart.getQuantity()}+'₫'"></td>
+                                                    <td th:text="${itemcart.getItem().getPrice() - 
+                                                    (itemcart.getItem().getPrice() * (itemcart.getItem().getDiscount() / 100.0))} + '₫'">
+                                                    </td>
+                                      
+                                                    <td th:text="${#numbers.formatInteger(
+                                                        ((itemcart.getItem().getPrice() - 
+                                                         (itemcart.getItem().getPrice() * (itemcart.getItem().getDiscount() / 100.0))) * itemcart.getQuantity()), 
+                                                        0, 'COMMA')} + '₫'">
+                                      </td>
+                                      
                                                     <input type="hidden" name="select-product" th:value="${itemcart.getItem().getID()}">
                                                     <input type="hidden" name="product-quantity"th:value="${itemcart.getQuantity()}">
                                                     <input type="hidden" name="product-price" th:value="${itemcart.getItem().getPrice()}+'₫'">
@@ -166,7 +170,7 @@
                                                     <td colspan="4" style="text-align:right; font-size: 1.2vw;"><b>Tổng
                                                             tiền:</b>
                                                     </td>
-                                                    <td><strong style="font-size: 1.2vw; font-weight:700;color:green" th:text="${totalAmount==0 ?' ' :totalAmount} + ' ₫'"></strong>
+                                                    <td><strong style="font-size: 1.2vw; font-weight:700;color:green" th:text="${totalAmount == 0 ? '' : #numbers.formatInteger(totalAmount,  0, 'COMMA')}+ ' đ'"></strong>
                                                     </td>
                                                 </tr>
                                             </tfoot>

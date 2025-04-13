@@ -41,7 +41,6 @@ public class PaymentController {
     List<CartItem> lCartItems;
 
     @SuppressWarnings("unchecked")
-
     @GetMapping
     public String gotoPayment(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
         lCartItems = (List<CartItem>) session.getAttribute("selectedItems"); // Giả lập danh sách sản phẩm
@@ -49,10 +48,12 @@ public class PaymentController {
             redirectAttributes.addFlashAttribute("alertMessage", "Giỏ hàng của bạn đang trống. Quay lại trang chủ.");
             return "redirect:/alert-redirect";
         }
-        double totalAmount = 0.0;
-        for (CartItem item : lCartItems) {
-            totalAmount += item.getGiasp() * (double) item.getQuantity(); // Tính tổng tiền
-        }
+        double totalAmount = lCartItems.stream().mapToDouble(
+                item -> ((item.getItem().getPrice()
+                        - (item.getItem().getPrice() * (item.getItem().getDiscount() / 100.0)))
+                        * item.getQuantity()))
+                .sum();
+        System.out.println("Total Amount: " + totalAmount);
         model.addAttribute("selectedItems", lCartItems);
         model.addAttribute("totalAmount", totalAmount); // Thêm tổng tiền vào mô hình
         Users lCartItems = (Users) session.getAttribute("taikhoan");
@@ -87,7 +88,10 @@ public class PaymentController {
         if (method.equals("cod")) {
             return ResponseEntity.ok("/payment/thanksyou");
         }
-        double total = lCartItems.stream().mapToDouble(item -> item.getGiasp() * (double) item.getQuantity())
+        double total = lCartItems.stream().mapToDouble(
+                item -> ((item.getItem().getPrice()
+                        - (item.getItem().getPrice() * (item.getItem().getDiscount() / 100.0)))
+                        * item.getQuantity()))
                 .sum();
         int id = Integer.parseInt(orderDAO.getLatestOrderId()); // Lấy ID đơn hàng mới nhất
         id++;
@@ -148,8 +152,11 @@ public class PaymentController {
             }
         }
         lCartItems = (List<CartItem>) session.getAttribute("selectedItems"); // Giả lập danh sách sản phẩm
-        double totalAmount = lCartItems.stream().mapToDouble(item -> item.getGiasp() * (double) item.getQuantity())
-                .sum(); // Tính tổng tiền
+        double totalAmount = lCartItems.stream().mapToDouble(
+                item -> ((item.getItem().getPrice()
+                        - (item.getItem().getPrice() * (item.getItem().getDiscount() / 100.0)))
+                        * item.getQuantity()))
+                .sum();// Tính tổng tiền
         String payments = l3.equals("payment") ? "VNPAY" : "COD";
         String notification = !l3.equals("payments") ? "Thanh toán khi giao hàng"
                 : "Đơn hàng đã được thanh toán trước!!!";

@@ -23,28 +23,30 @@ public class CartController {
     @Autowired
     private ProductDAO productDAO;
 
+    private List<CartItem> lCartItems;
+
+    @SuppressWarnings("unchecked")
     @GetMapping
     public String viewCart(Model model, HttpSession session) {
 
-        List<CartItem> cartItems = (List<CartItem>) session.getAttribute("listcart"); // Giả lập danh sách sản phẩm
-        if (cartItems == null) {
-            cartItems = new ArrayList<>();
+        lCartItems = (List<CartItem>) session.getAttribute("listcart"); // Giả lập danh sách sản phẩm
+        if (lCartItems == null) {
+            lCartItems = new ArrayList<>();
         }
-        model.addAttribute("listcart", cartItems);
-        double tongTatCaTien = cartItems.stream().mapToDouble(CartItem::getGiasp).sum();
+        model.addAttribute("listcart", lCartItems);
+        double tongTatCaTien = lCartItems.stream().mapToDouble(CartItem::getGiasp).sum();
         model.addAttribute("tongTatCaTien", tongTatCaTien);
         System.out.println("Tong tat ca tien: " + tongTatCaTien);
         return "cart";
     }
 
+    @SuppressWarnings("unchecked")
     @PostMapping("/add")
     public ResponseEntity<?> addtocart(@RequestBody Map<String, Object> requestData, HttpSession session) {
         System.out.println("Sản phẩm thêm vào giỏ hàng: " + requestData);
 
         String spbtId = (String) requestData.get("spbt_id");
-        String sizeId = (String) requestData.get("size_id");
         String quantity = (String) requestData.get("so_luong");
-        String price = (String) requestData.get("price");
         String stock = (String) requestData.get("stock");
 
         Product producttemp = productDAO.FindProduct1(spbtId);
@@ -56,19 +58,17 @@ public class CartController {
         if (Integer.parseInt(stock) < Integer.parseInt(quantity))
             return ResponseEntity.badRequest().body("Số lượng sản phẩm không đủ!");
 
-        List<CartItem> listitem = (List<CartItem>) session.getAttribute("listcart");
-        if (listitem == null) {
-            listitem = new ArrayList<>();
+        lCartItems = (List<CartItem>) session.getAttribute("listcart");
+        if (lCartItems == null) {
+            lCartItems = new ArrayList<>();
         }
 
-        Users account = (Users) session.getAttribute("taikhoan");
-        String idaccount = (account == null) ? "-1" : account.getId();
-        for (CartItem item : listitem) {
+        for (CartItem item : lCartItems) {
             if (item.getIDItem().equals(spbtId)) {
                 item.setQuantity(item.getQuantity() + Integer.parseInt(quantity));
                 item.setGiasp(item.getQuantity()
                         * (producttemp.getPrice() - (producttemp.getPrice() * (producttemp.getDiscount() / 100))));
-                session.setAttribute("listcart", listitem);
+                session.setAttribute("listcart", lCartItems);
                 return ResponseEntity.ok("Sản phẩm đã thêm thành công!");
             }
         }
@@ -80,52 +80,52 @@ public class CartController {
         newItem.setItem(producttemp);
         newItem.setGiasp(newItem.getQuantity()
                 * (producttemp.getPrice() - (producttemp.getPrice() * (producttemp.getDiscount() / 100))));
-        listitem.add(newItem);
-        session.setAttribute("listcart", listitem);
+        lCartItems.add(newItem);
+        session.setAttribute("listcart", lCartItems);
 
         return ResponseEntity.ok("Sản phẩm đã thêm thành công!");
     }
 
+    @SuppressWarnings("unchecked")
     @PostMapping("/delete")
     public ResponseEntity<?> deleteItem(@RequestBody Map<String, Object> requestData, HttpSession session) {
         System.out.println("Sản phẩm xóa khỏi giỏ hàng: " + requestData);
 
         String spbtId = (String) requestData.get("spbt_id");
-        List<CartItem> listitem = (List<CartItem>) session.getAttribute("listcart");
+        lCartItems = (List<CartItem>) session.getAttribute("listcart");
 
-        if (listitem != null) {
-            listitem.removeIf(item -> item.getIDItem().equals(spbtId));
-            session.setAttribute("listcart", listitem);
+        if (lCartItems != null) {
+            lCartItems.removeIf(item -> item.getIDItem().equals(spbtId));
+            session.setAttribute("listcart", lCartItems);
         }
 
         return ResponseEntity.ok("Sản phẩm đã xóa thành công!");
     }
 
+    @SuppressWarnings("unchecked")
     @PostMapping("/checkout")
     public ResponseEntity<String> checkout(HttpSession session,
             @RequestBody Map<String, List<Map<String, Object>>> requestData) {
         List<Map<String, Object>> request = requestData.get("products");
         System.out.println("Sản phẩm được chọn để thanh toán: " + requestData.toString());
 
-        List<CartItem> listitemselect = new ArrayList<>();
+        List<CartItem> lCartItemsselect = new ArrayList<>();
         for (Map<String, Object> item : request) {
             String id = item.get("id") != null ? item.get("id").toString() : "";
             String quantity = item.get("quantity") != null ? item.get("quantity").toString() : "";
-            String price = item.get("price") != null ? item.get("price").toString() : "";
-            String discount = item.get("discount") != null ? item.get("discount").toString() : "";
 
             Product temps = productDAO.FindProduct1(id);
             temps.setListIMG(productDAO.getListIMG(temps));
-            listitemselect.add(new CartItem(id, Integer.parseInt(quantity), temps));
+            lCartItemsselect.add(new CartItem(id, Integer.parseInt(quantity), temps));
         }
 
         // Giả lập danh sách sản phẩm đã chọn để thanh toán
-        List<CartItem> listitem = (List<CartItem>) session.getAttribute("listcart");
+        lCartItems = (List<CartItem>) session.getAttribute("listcart");
 
-        if (listitem == null || listitem.isEmpty()) {
+        if (lCartItems == null || lCartItems.isEmpty()) {
             return ResponseEntity.ok("/cart"); // Trả về đường dẫn /cart nếu giỏ hàng trống
         }
-        session.setAttribute("selectedItems", listitemselect);
+        session.setAttribute("selectedItems", lCartItemsselect);
         return ResponseEntity.ok("/payment"); // Trả về đường dẫn /payment
     }
 

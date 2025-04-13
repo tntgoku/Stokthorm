@@ -2,13 +2,11 @@ package com.example.clone1.ControllerM;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +16,6 @@ import com.example.clone1.Model.Users;
 import com.example.clone1.Service.UserRegisterDTO;
 
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping("/register")
@@ -68,7 +65,6 @@ public class RegisterController {
         if (!errors.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("errors", errors));
         }
-        // TODO: Lưu vào DB (ví dụ: sử dụng JdbcTemplate hoặc JPA)
         userSV.saveUser(user);
         return ResponseEntity.ok().build(); // 200 OK nếu thành công
     }

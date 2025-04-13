@@ -145,6 +145,16 @@ public class OrderDAO {
         }
     }
 
+    public int updateStatusOrder(String status, int orderId) {
+        String sql = "UPDATE Orders SET Status = ? WHERE OrderID = ?";
+        try {
+            return template.update(sql, status, orderId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
     // Phương thức để xóa đơn hàng
     public int deleteOrder(String orderId) {
         String sql = "DELETE FROM Orders WHERE OrderID = ?";
@@ -166,6 +176,39 @@ public class OrderDAO {
         } catch (Exception e) {
             e.printStackTrace(); // In lỗi ra console/log
             return -1; // Trả về -1 để báo lỗi
+        }
+    }
+
+    public List<Order> getAllOrders(int page, int size) {
+        int offset = page * size;
+        String sql = "SELECT * FROM Orders ORDER BY OrderDate  OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        try {
+            return template.query(sql, (rs, rowNum) -> {
+                Order order = new Order();
+                order.setOrderId(rs.getString("OrderID"));
+                order.setUserId(rs.getString("UserID"));
+                order.setOrderDate(rs.getString("OrderDate"));
+                order.setNote(rs.getString("Note"));
+                order.setShippingFee(rs.getFloat("ShippingFee"));
+                order.setPaymentMethod(rs.getString("PaymentMethod"));
+                order.setStatuspayment(rs.getString("PaymentStatus"));
+                order.setTotalAmount(rs.getDouble("TotalAmount"));
+                order.setStatus(rs.getString("Status"));
+                order.setCartItems(getCartItemsByOrderId(order.getOrderId()));
+                for (CartItem item : order.getCartItems()) {
+                    Product temp = productDAO.getProduct(item.getIDItem1()) != null
+                            ? productDAO.getProduct(item.getIDItem1())
+                            : null;
+                    if (temp != null) {
+                        item.setItem(temp);
+                        item.getItem().setListIMG(productDAO.getListIMG(temp));
+                    }
+                }
+                return order;
+            }, offset, size);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 
@@ -191,6 +234,13 @@ public class OrderDAO {
             // Ghi log nếu cần
             return new ArrayList<>();
         }
+    }
+
+    public int countTotalOrders() {
+        String sql = "SELECT COUNT(*) FROM Orders";
+        Integer totalOrders = template.queryForObject(sql, Integer.class); // ✅ đúng
+
+        return totalOrders != null ? totalOrders : 0;
     }
 
     // Phương thức để lấy tất cả các sản phẩm trong giỏ hàng theo ID đơn hàng

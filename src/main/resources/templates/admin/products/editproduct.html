@@ -1,14 +1,12 @@
-<!-- Header -->
-<?php require './views/layout/header.php'; ?>
-<!-- End Header -->
-
+<!-- Header-->
+<header  th:replace="~{admin/layout/header}"></header>
+<!-- EndHeader-->
 <!-- Navbar -->
-<?php include './views/layout/navbar.php'; ?>
-<!-- End Navbar -->
+<header  th:replace="~{admin/layout/navbar}"></header>
+<!-- /.navbar -->
 
-<!-- Sidebar -->
-<?php include './views/layout/sidebar.php'; ?>
-<!-- End Sidebar -->
+<!-- Main Sidebar Container -->
+<aside th:replace="~{admin/layout/sidebar}"> </aside>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -18,7 +16,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1><a
-                            href="<?= BASE_URL_ADMIN . '?act=listProduct' ?>">Quản
+                            th:href="@{/admin/listproduct}">Quản
                             Lý Sản Phẩm</a></h1>
                 </div>
 
@@ -33,125 +31,95 @@
                 <div class="col-12">
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">Sửa Sản Phẩm</h3>
+                            <h3 class="card-title" th:text="'Sửa Sản Phẩm: ' + ${product.getID()}"></h3>
 
                         </div>
                         <!-- form start -->
-                        <form
-                            action="<?= BASE_URL_ADMIN .'?act=editProduct' ?>"
-                            method="post" enctype="multipart/form-data">
+                        <form th:action="@{/admin/listproduct/formEditProduct}" method="post" enctype="multipart/form-data" th:object="${product}">
                             <div class="card-body row">
-                                <input type="number" name="spbt_id"
-                                    value="<?=$product['spbt_id']?>"
-                                    readonly hidden>
-                                <input type="number" name="sp_id"
-                                    value="<?=$product['sp_id']?>"
-                                    readonly hidden>
-                                <input type="number" name="size_id"
-                                    value="<?=$product['size_id']?>"
-                                    readonly hidden>
+                                <!-- Sửa id sản phẩm -->
+                                <input type="number" name="spbt_id" th:field="*{ID}" readonly hidden>
+                                
                                 <!-- Tên sản phẩm -->
                                 <div class="form-group col-12">
                                     <label for="ten_sp">Tên Sản Phẩm</label>
-                                    <input
-                                        value="<?= $product['ten_sp'] ?>"
-                                        type="text" name="ten_sp" class="form-control" id="ten_sp"
-                                        placeholder="Tên Sản Phẩm">
-                                    <?php if (isset($_SESSION['error']['ten_sp'])) { ?>
-                                    <p class="text-danger">
-                                        <?= $_SESSION['error']['ten_sp'] ?>
-                                    </p>
-                                    <?php } ?>
+                                    <input type="text" th:field="*{Name}" class="form-control" id="ten_sp" placeholder="Tên Sản Phẩm" />
+                                    <p th:if="${#fields.hasErrors('Name')}" th:errors="*{Name}" class="text-danger"></p>
                                 </div>
-
+                        
                                 <!-- Giá -->
                                 <div class="form-group col-6">
-                                    <label for="gia_sp">Giá Sản Phẩm</label>
-                                    <input
-                                        value="<?= $product['gia_sp'] ?>"
-                                        type="number" name="gia_sp" min="0" class="form-control" id="gia_sp"
-                                        placeholder="Giá">
-                                    <?php if (isset($_SESSION['error']['gia_sp'])) { ?>
-                                    <p class="text-danger">
-                                        <?= $_SESSION['error']['gia_sp'] ?>
-                                    </p>
-                                    <?php } ?>
+                                    <label for="Price">Giá Sản Phẩm</label>
+                                    <input type="number" min="0" th:field="*{Price}" class="form-control" id="Price" placeholder="Giá" />
+                                    <p th:if="${#fields.hasErrors('Price')}" th:errors="*{Price}" class="text-danger"></p>
                                 </div>
-
+                        
+                                <!-- Size -->
+                                <div class="form-group col-6">
+                                    <label for="Size">Size</label>
+                                    <input type="text" name="Size" th:field="*{Size}" class="form-control" id="Size" placeholder="Size" />
+                                </div>
+                        
+                                <!-- Màu sắc -->
+                                <div class="form-group col-6">
+                                    <label for="Color">Màu Sắc</label>
+                                    <input type="text" name="Color" th:field="*{Color}" class="form-control" id="Color" placeholder="Màu sắc" />
+                                </div>
+                        
                                 <!-- Giá khuyến mãi -->
                                 <div class="form-group col-6">
                                     <label for="km_sp">Giá Khuyến Mãi</label>
-                                    <input
-                                        value="<?= $product['km_sp'] ?>"
-                                        type="number" name="km_sp" min="0" class="form-control" id="km_sp"
-                                        placeholder="Giá Khuyến Mãi">
-                                    <?php if (isset($_SESSION['error']['km_sp'])) { ?>
-                                    <p class="text-danger">
-                                        <?= $_SESSION['error']['km_sp'] ?>
-                                    </p>
-                                    <?php } ?>
+                                    <input type="number" min="0" th:field="*{Discount}" class="form-control" id="km_sp" placeholder="Giá Khuyến Mãi" />
+                                    <p th:if="${#fields.hasErrors('Discount')}" th:errors="*{Discount}" class="text-danger"></p>
                                 </div>
-
+                        
                                 <!-- Danh mục -->
                                 <div class="form-group col-6">
                                     <label for="dm_id">Thuộc Danh Mục</label>
-                                    <select class="form-control" name="dm_id" id="dm_id">
-                                        <?php foreach ($listCategory as $danhMuc): ?>
-                                        <option <?= $danhMuc['dm_id'] === $product['dm_id'] ? 'selected' : '' ?>
-                                            value="<?= $danhMuc['dm_id'] ?>">
-                                            <?= $danhMuc['ten_dm'] ?>
+                                    <select class="form-control" th:field="*{CategoryID}" id="dm_id">
+                                        <option th:each="danhMuc : ${listCategory}" th:value="${danhMuc.getId()}" th:text="${danhMuc.getName()}"
+                                                th:selected="${danhMuc.getId() == product.getCategoryID()}">
                                         </option>
-                                        <?php endforeach; ?>
                                     </select>
-                                    <?php if (isset($_SESSION['error']['dm_id'])) { ?>
-                                    <p class="text-danger">
-                                        <?= $_SESSION['error']['dm_id'] ?>
-                                    </p>
-                                    <?php } ?>
+                                    <p th:if="${#fields.hasErrors('CategoryID')}" th:errors="*{CategoryID}" class="text-danger"></p>
                                 </div>
+                        
                                 <!-- Số lượng -->
                                 <div class="form-group col-6">
                                     <label for="so_luong">Số lượng</label>
-                                    <input
-                                        value="<?= $product['so_luong'] ?>"
-                                        type="number" name="so_luong" class="form-control" id="so_luong"
-                                        placeholder="Số lượng">
-                                    <?php if (isset($_SESSION['error']['so_luong'])) { ?>
-                                    <p class="text-danger">
-                                        <?= $_SESSION['error']['so_luong'] ?>
-                                    </p>
-                                    <?php } ?>
+                                    <input th:field="*{Quantity}" type="number" min="0" name="so_luong" class="form-control" id="so_luong" placeholder="Số lượng" />
+                                    <p th:if="${#fields.hasErrors('Quantity')}" th:errors="*{Quantity}" class="text-danger"></p>
                                 </div>
+                        
                                 <!-- Ảnh sản phẩm -->
                                 <div class="mb-3 col-6">
                                     <label for="img_sp" class="form-label">Ảnh sản phẩm</label>
-                                    <input type="file" name="img_sp" class="form-control" id="img_sp"
-                                        placeholder="Ảnh sản phẩm">
+                                    <input type="file" name="img_sp" class="form-control" id="img_sp" placeholder="Ảnh sản phẩm">
                                 </div>
                                 <div class="mb-3 col-6">
                                     <div>
-                                        <?php
-                                            $img_sp = $this->modelProduct->getDetailProduct($spbt_id);
-if (!empty($img_sp['img_sp'])):?>
-                                        <img src="../<?= $img_sp['img_sp']?>"
-                                            alt="Không có ảnh" style="max-width: 80px; height: auto;">
-                                        <?php endif;?>
+                                        <p th:if="${product.getListIMG() != null and product.getListIMG().size() > 0}">
+                                            <img th:src="@{'/images/' + ${product.getListIMG().get(0)}}" alt="Không có ảnh" style="max-width: 80px; height: auto;">
+                                        </p>
+                                        <p th:if="${product.getListIMG() == null or product.getListIMG().size() == 0}">
+                                            Không có ảnh
+                                        </p>
                                     </div>
                                 </div>
+                        
                                 <!-- Mô tả -->
                                 <div class="form-group col-12">
                                     <label for="mo_ta">Mô tả</label>
-                                    <input
-                                        value="<?= $product['mo_ta'] ?>"
-                                        type="text" name="mo_ta" id="mo_ta" class="form-control" placeholder="Mô tả">
-
+                                    <input th:field="*{Description}" type="text" name="mo_ta" id="mo_ta" class="form-control" placeholder="Mô tả">
                                 </div>
+                        
                                 <!-- Nút submit -->
                                 <div class="card-footer">
                                     <button type="submit" class="btn btn-primary">Sửa</button>
                                 </div>
                             </div>
                         </form>
+                        
 
                     </div>
                 </div>
@@ -161,7 +129,6 @@ if (!empty($img_sp['img_sp'])):?>
 </div>
 
 <!-- Footer -->
-<?php include './views/layout/footer.php'; ?>
 <!-- End Footer -->
 
 </body>

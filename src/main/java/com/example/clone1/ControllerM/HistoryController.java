@@ -17,10 +17,6 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/orders")
 public class HistoryController {
-    @Autowired
-    private UserDAO userDAO;
-    @Autowired
-    private ProductDAO productDAO;
     private String trangThai;
     @Autowired
     private OrderDAO orderdao;
@@ -42,9 +38,18 @@ public class HistoryController {
     public String chiTietDonHang(@RequestParam("id") String orderId, Model model) {
         System.out.println("OrderID:   " + orderId);
         Order order = orderdao.getOrderById(orderId);
+        order.getNote();
+        System.out.println("Gia Tri Note: " + order.getNote());
+        String[] arr = order.getNote().split("\\{\\\\}");
+        for (String string : arr) {
+            System.out.println(string);
 
+        }
         String moTaTrangThai = TrangThaiDonHang.fromString(order.getStatus()).getMoTa();
         model.addAttribute("order", order);
+        model.addAttribute("name", arr[0]);
+        model.addAttribute("number", arr[1]);
+        model.addAttribute("add", arr[2]);
         model.addAttribute("trangThaiMoTa", moTaTrangThai);
         List<CartItem> items = order.getCartItems(); // hoặc order.getChiTietDonHang()
         model.addAttribute("productDonHang", items);

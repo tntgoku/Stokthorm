@@ -9,6 +9,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import com.example.clone1.Model.Users;
@@ -27,7 +28,7 @@ public class UserDAO {
         String sql = "SELECT * FROM Users";
         return template.query(sql, new RowMapper<Users>() {
             @Override
-            public Users mapRow(ResultSet rs, int rowNum) throws SQLException {
+            public Users mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
                 return new Users(
                         rs.getString("UserID"),
                         rs.getString("FullName"),
@@ -36,6 +37,30 @@ public class UserDAO {
                         rs.getString("PhoneNumber"),
                         rs.getString("Address"),
                         rs.getString("Role"));
+            }
+        });
+    }
+
+    // Dung cho trang admin
+    public List<Users> GetAllUser1() {
+        String sql = "SELECT * FROM Users";
+        return template.query(sql, new RowMapper<Users>() {
+            @Override
+            public Users mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
+                Users s = new Users();
+                s.setId(rs.getString("UserID"));
+                s.setName(rs.getString("FullName"));
+                s.setEmail(rs.getString("Email"));
+                s.setPhonenumber("PhoneNumber");
+                s.setAddress(rs.getString("Address"));
+                s.setPassword(rs.getString("Pwd"));
+                s.setRole(rs.getString("Role"));
+                s.setCreateat(rs.getString("CreatedAt"));
+                String sql = "SELECT SUM(o.TotalAmount) FROM Users s JOIN Orders o ON s.UserID = o.UserID WHERE s.UserID = ?";
+                Integer total = template.queryForObject(sql, Integer.class, s.getId());
+
+                s.setTotalBuy((total != null) ? total : 0);
+                return s;
             }
         });
     }

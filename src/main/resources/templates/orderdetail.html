@@ -89,6 +89,18 @@
                   <div class="row">
                     <div class="col-12 table-responsive">
                       <table class="table table-striped">
+                        <div class="single-input-item">
+                          <label for="ho_ten">Họ và tên</label>
+                          <input type="text" placeholder="Tên đăng nhập" name="ho_ten" th:value="${name}" readonly="">
+                      </div>
+                      <div class="single-input-item">
+                        <label for="phone">Số điện thoại</label>
+                        <input type="text" name="number" th:value="${number}" readonly="">
+                    </div>
+                    <div class="single-input-item">
+                      <label for="address">Địa chỉ nơi trốn</label>
+                      <input type="text" name="add" th:value="${add}" readonly="">
+                  </div>  
                         <thead>
                           <tr>
                             <th>Ảnh sản phẩm</th>

@@ -1,0 +1,5 @@
+<p th:case="'Pending'">Trạng thái đơn hàng: Chờ xác nhận</p>
+                    <p th:case="'Shipped'">Trạng thái đơn hàng: Đang giao</p>
+                    <p th:case="'Delivered'">Trạng thái đơn hàng: Đã giao</p>
+                    <p th:case="'Cancelled'">Trạng thái đơn hàng: Hủy đơn</p>
+                    <p th:case="*">Trạng thái đơn hàng: Không xác định</p>

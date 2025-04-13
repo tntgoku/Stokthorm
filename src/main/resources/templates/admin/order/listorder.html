@@ -1,13 +1,12 @@
 <!-- Header-->
-<?php include './views/layout/header.php' ?>
+<header  th:replace="~{admin/layout/header}"></header>
 <!-- EndHeader-->
-
 <!-- Navbar -->
-<?php include './views/layout/navbar.php' ?>
+<header  th:replace="~{admin/layout/navbar}"></header>
 <!-- /.navbar -->
 
 <!-- Main Sidebar Container -->
-<?php include './views/layout/sidebar.php' ?>
+<aside th:replace="~{admin/layout/sidebar}"> </aside>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -16,7 +15,7 @@
       <div class="row mb-2">
         <div class="col-sm-6">
           <h1><a
-              href="<?= BASE_URL_ADMIN . '?act=listOrder' ?>">Quản
+              th:href="@{/admin/listOrder}">Quản
               Lý Đơn Hàng</a></h1>
         </div>
       </div>
@@ -31,7 +30,8 @@
           <div class="card">
             <!-- /.card-header -->
             <div class="card-body">
-              <table class="table table-bordered dataTable table-striped" style="text-align:center;">
+              <div class="dt-buttons btn-group flex-wrap">               
+              <table class="table " style="text-align:center;">
                 <thead>
                   <tr>
                     <th>Mã đơn hàng</th>
@@ -43,73 +43,63 @@
                     <th>Tổng tiền</th>
                     <th>Ngày đặt</th>
                     <th>Trạng thái</th>
+                    <th>Thanh toán</th>
                     <th>Chức năng</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <?php foreach ($listOrder as $order): ?>
-                  <tr>
-                    <td>
-                      <?= $order['order_id'] ?>
+                  <tr th:each="order : ${listOrder}">
+                    <td th:text="${order.getOrderId()}">
+                    </td>
+                    <td th:text="${order.getUserId()}">
+                    </td>
+                    <td th:text="${order.getName()}">
+                    </td>
+                    <td th:text="${order.getPhone()}">
+                    </td>
+                    <td th:text="${order.getAddress()}">
+                    </td>
+                    <td th:text= "${order.getTotalquantity()}">
+                    </td>
+                    <td th:text="${order.getTotalAmount()}">
+                    </td>
+                    <td th:text="${order.getDate()}">
+                    </td>
+                    <td >
+                      <select class=" form-select status-select" name="status"  th:attr="data-id=${order.getOrderId()}" >
+                        <option value="Pending" th:selected="${order.getStatus() == 'Pending'}"  class="alert alert-secondary" >Chờ xác nhận</option>
+                        <option value="Shipped" th:selected="${order.getStatus() == 'Shipped'}" class="alert alert-primary">Đang giao</option>
+                        <option value="Delivered" th:selected="${order.getStatus() == 'Delivered'}" class="alert alert-success"  >Đã giao</option>
+                        <option value="Cancelled" th:selected="${order.getStatus() == 'Cancelled'}"  class="alert alert-danger" >Hủy đơn</option>
+                      </select>
+                    </td>
+                    <td th:switch= "${order.getStatuspayment()}">
+                      <div th:case="'Pending'" class="alert alert-warning text-md-start" role="alert">
+                          Đang chờ thanh toán
+                      </div>
+                      <div th:case="'Completed'" class="alert alert-success text-md-start" role="alert">
+                        Đã thanh toán
+                      </div>
                     </td>
                     <td>
-                      <?= $order['tk_id'] ?>
+                      <a th:href="@{'/admin/listOrder?act=detailorder&id=' + ${order.getOrderId()}}" class="btn btn-info mt-2">Chi tiết </a>
                     </td>
-                    <td>
-                      <?= $order['ten_nhan'] ? $order['ten_nhan'] : $order['ho_ten'] ?>
-                    </td>
-                    <td>
-                      <?= $order['sdt_nhan'] ? $order['sdt_nhan'] : $order['sdt']  ?>
-                    </td>
-                    <td>
-                      <?= $order['dia_chi_nhan'] ? $order['dia_chi_nhan'] : $order['dia_chi']  ?>
-                    </td>
-                    <td>
-                      <?= $order['tong_so_luong'] ?>
-                    </td>
-                    <td>
-                      <?= number_format($order['tong_tien']) ?>
-                    </td>
-                    <td>
-                      <?= date('d/m/Y H:i', strtotime($order['ngay_dat'])) ?>
-                    </td>
-                    <td>
-                      <?php if($order['trang_thai'] == 1) {
-                          echo'<p class="alert alert-info">Chờ xác nhận</p>';
-                      } elseif($order['trang_thai'] == 2) {
-                          echo'<p class="alert alert-warning">Đang giao hàng</p>';
-                      } elseif($order['trang_thai'] == 3) {
-                          echo'<p class="alert alert-success">Đã giao hàng</p>';
-                      } else {
-                          echo'<p class="alert alert-danger">Đơn bị hủy</p>';
-                      } ?>
-                    </td>
-                    <td>
-                      <a
-                        href="<?= BASE_URL_ADMIN.'?act=update-trang-thai&id='.$order['order_id'] ?>"><button
-                          class="btn btn-primary">Cập nhật</button></a>
-                      <a
-                        href="<?= BASE_URL_ADMIN.'?act=detailOrder&id='.$order['order_id'] ?>"><button
-                          class="btn btn-info mt-2">Chi tiết</button></a>
-                    </td>
+                  </tr>
 
-                  </tr>
-                  <?php endforeach ?>
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <th>Mã đơn hàng</th>
-                    <th>Tài khoản ID</th>
-                    <th>Tên người nhận</th>
-                    <th>Số điện thoại</th>
-                    <th>Địa chỉ</th>
-                    <th>Tổng số lượng</th>
-                    <th>Tổng tiền</th>
-                    <th>Ngày đặt</th>
-                    <th>Trạng thái</th>
-                    <th>Chức năng</th>
-                  </tr>
-                </tfoot>
+                  <ul class="pagination justify-content-center">
+                    <li th:if="${currentPage > 0}" class="page-item">
+                      <a class="page-link" th:href="@{'/admin/listOrder'(page=${currentPage - 1})}">Trước</a>
+                    </li>
+                  
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                        th:classappend="${i == currentPage} ? 'active'">
+                      <a class="page-link" th:href="@{'/admin/listOrder'(page=${i})}" th:text="${i + 1}">1</a>
+                    </li>
+                  
+                    <li th:if="${currentPage < totalPages - 1}" class="page-item">
+                      <a class="page-link" th:href="@{'/admin/listOrder'(page=${currentPage + 1})}">Tiếp</a>
+                    </li>
+                  </ul>
               </table>
             </div>
             <!-- /.card-body -->
@@ -128,7 +118,7 @@
 </div>
 <!-- /.content-wrapper -->
 <!-- Footer -->
-<?php include './views/layout/footer.php' ?>
+<footer th:replace="~{admin/layout/footer}"> </footer>
 <!-- EndFooter -->
 <!-- Page specific script -->
 <script>
@@ -149,6 +139,7 @@
       "responsive": true,
     });
   });
+
 </script>
 </body>
 

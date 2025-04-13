@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.clone1.DAO.ProductDAO;
-import com.example.clone1.DAO.UserDAO;
 import com.example.clone1.Model.Product;
 
 import jakarta.servlet.http.HttpSession;
@@ -22,8 +21,7 @@ public class ControllerM {
 
     @Autowired
     private ProductDAO productD;
-    @Autowired
-    private UserDAO userDAO;
+    List<Product> listProductC;
 
     @GetMapping("/")
     public String GoHomePage(Model model) {
@@ -43,9 +41,9 @@ public class ControllerM {
     @GetMapping("/home")
     public String HomePage(Model model) {
 
-        List<Product> listA = productD.getAllProduct();
-        if (!listA.isEmpty()) {
-            for (Product map : listA) {
+        listProductC = productD.getAllProduct();
+        if (!listProductC.isEmpty()) {
+            for (Product map : listProductC) {
                 map.setListIMG(productD.getListIMG(map));
                 if (map.getListIMG() == null)
                     System.out.println("Ko co anh!!!!!!!!!!!!!!!!!!1");
@@ -54,7 +52,7 @@ public class ControllerM {
                 System.out.println("Data: " + map.toString());
 
             }
-            model.addAttribute("producta", listA);
+            model.addAttribute("producta", listProductC);
         } else {
             System.out.println("Error");
         }
@@ -115,7 +113,7 @@ public class ControllerM {
         model.addAttribute("listSize", listSize);
         model.addAttribute("listColor", listColor);
         model.addAttribute("listQuantity", listQuantity);
-        List<Product> listProductC = productD.getAllProductByCate(product.getCategoryID());
+        listProductC = productD.getAllProductByCate(product.getCategoryID());
         if (listProductC == null)
             System.out.println("Khong co san pham");
         else

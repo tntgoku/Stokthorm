@@ -5,8 +5,8 @@ public class Users {
     private String Password;
     private String Img;
     private String Mat_khau;
-    private String Mat_khau2;
     private int totalBuy;
+    private String Createat;
 
     public Users() {
         this.Role = "Customer";
@@ -16,6 +16,18 @@ public class Users {
         if (Password == null || Mat_khau == null)
             return true;
         return Password.equals(Mat_khau);
+    }
+
+    public Users(String Id, String Name, String Email, String Phonenumber, String Address,
+            String Password, String Role, String Createat) {
+        this.Id = Id;
+        this.Name = Name;
+        this.Role = Role;
+        this.Email = Email;
+        this.Phonenumber = Phonenumber;
+        this.Address = Address;
+        this.Password = Password;
+        this.Createat = Createat;
     }
 
     public Users(String id, String name, String email, String matkhau, String phonenumber, String address,
@@ -50,8 +62,15 @@ public class Users {
         this.Password = Password;
         this.Img = Img;
         this.Mat_khau = Mat_khau;
-        this.Mat_khau2 = Mat_khau2;
         this.totalBuy = totalBuy;
+    }
+
+    public String getCreateat() {
+        return this.Createat;
+    }
+
+    public void setCreateat(String Createat) {
+        this.Createat = Createat;
     }
 
     @Override
@@ -157,14 +176,6 @@ public class Users {
 
     public void setMat_khau(String Mat_khau) {
         this.Mat_khau = Mat_khau;
-    }
-
-    public String getMat_khau2() {
-        return this.Mat_khau2;
-    }
-
-    public void setMat_khau2(String Mat_khau2) {
-        this.Mat_khau2 = Mat_khau2;
     }
 
     public int getTotalBuy() {

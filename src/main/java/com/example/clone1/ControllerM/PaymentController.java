@@ -2,9 +2,7 @@ package com.example.clone1.ControllerM;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -16,15 +14,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.clone1.DAO.*;
 import com.example.clone1.Model.*;
-import com.example.clone1.Service.VNPayConfig;
 import com.example.clone1.Service.VNPayService;
 
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,32 +38,37 @@ public class PaymentController {
     @Autowired
     private VNPayService vnPayService;
 
+    List<CartItem> lCartItems;
+
+    @SuppressWarnings("unchecked")
+
     @GetMapping
-    public static String gotoPayment(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
-        List<CartItem> cartItems = (List<CartItem>) session.getAttribute("selectedItems"); // Giả lập danh sách sản phẩm
-        if (cartItems == null) {
+    public String gotoPayment(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+        lCartItems = (List<CartItem>) session.getAttribute("selectedItems"); // Giả lập danh sách sản phẩm
+        if (lCartItems == null) {
             redirectAttributes.addFlashAttribute("alertMessage", "Giỏ hàng của bạn đang trống. Quay lại trang chủ.");
             return "redirect:/alert-redirect";
         }
         double totalAmount = 0.0;
-        for (CartItem item : cartItems) {
+        for (CartItem item : lCartItems) {
             totalAmount += item.getGiasp() * (double) item.getQuantity(); // Tính tổng tiền
         }
-        model.addAttribute("selectedItems", cartItems);
+        model.addAttribute("selectedItems", lCartItems);
         model.addAttribute("totalAmount", totalAmount); // Thêm tổng tiền vào mô hình
-        Users temps = (Users) session.getAttribute("taikhoan");
-        if (temps != null) {
-            model.addAttribute("taikhoan", temps);
-            System.out.println(temps.toString());
+        Users lCartItems = (Users) session.getAttribute("taikhoan");
+        if (lCartItems != null) {
+            model.addAttribute("taikhoan", lCartItems);
+            System.out.println(lCartItems.toString());
         }
         return "payment";
     }
 
+    @SuppressWarnings("unchecked")
     @PostMapping("checkpayment")
     public ResponseEntity<String> postMethodName(@RequestBody Map<String, Object> requestData, HttpSession session,
             HttpServletRequest request) {
-        List<CartItem> temps = (List<CartItem>) session.getAttribute("selectedItems");
-        session.setAttribute("selectedItems", temps);
+        List<CartItem> lCartItems = (List<CartItem>) session.getAttribute("selectedItems");
+        session.setAttribute("selectedItems", lCartItems);
         Users user = (Users) session.getAttribute("taikhoan");
 
         if (user == null) {
@@ -77,13 +77,8 @@ public class PaymentController {
             session.setAttribute("taikhoan", user);
             System.out.println(user.toString());
         }
-        System.out.println("Sản phẩm thêm vào giỏ hàng: " + temps.toString());
+        System.out.println("Sản phẩm thêm vào giỏ hàng: " + lCartItems.toString());
 
-        String l = requestData.get("ten") != null ? (String) requestData.get("ten") : "";
-        String l1 = requestData.get("sdt") != null ? (String) requestData.get("sdt") : "";
-        String l2 = requestData.get("diaChi") != null ? (String) requestData.get("diaChi") : "";
-        String infor = l2 + "{/}" + DateFormat.getDateTimeInstance(0, 0, Locale.getDefault()).format(new Date());
-        // TODO: process POST request
         session.setAttribute("dataRequest", requestData);
         System.out.println("RequestDataCheckPayMent: " + requestData.toString());
 
@@ -92,11 +87,10 @@ public class PaymentController {
         if (method.equals("cod")) {
             return ResponseEntity.ok("/payment/thanksyou");
         }
-        double total = temps.stream().mapToDouble(item -> item.getGiasp() * (double) item.getQuantity())
+        double total = lCartItems.stream().mapToDouble(item -> item.getGiasp() * (double) item.getQuantity())
                 .sum();
         int id = Integer.parseInt(orderDAO.getLatestOrderId()); // Lấy ID đơn hàng mới nhất
         id++;
-        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
         String orderInfo = "Thanh toan hoa don " + String.valueOf(id);
         String urlReturn = "http://localhost:8080/payment/thanksyou";
         String vnpayUrl = vnPayService.createOrder(request, (int) total, orderInfo, urlReturn);
@@ -104,12 +98,12 @@ public class PaymentController {
         return ResponseEntity.ok(vnpayUrl); // Redirect to the payment page after processing
     }
 
+    @SuppressWarnings("unchecked")
     @GetMapping("/thanksyou")
     public String GetPageThanks(HttpSession session, Model model, RedirectAttributes redirectAttributes,
             HttpServletRequest request) {
         System.out.println("Cảm ơn vì đã mua hàng "
                 + DateFormat.getDateTimeInstance(0, 0, Locale.getDefault()).format(new Date()));
-
         Map<String, Object> requestData = (Map<String, Object>) session.getAttribute("dataRequest");
         if (requestData == null) {
             redirectAttributes.addFlashAttribute("alertMessage", "Đã sảy ra lỗi ");
@@ -153,8 +147,8 @@ public class PaymentController {
                 System.out.println("Đăng ký thành công User" + user.toString());
             }
         }
-        List<CartItem> cartItems = (List<CartItem>) session.getAttribute("selectedItems"); // Giả lập danh sách sản phẩm
-        double totalAmount = cartItems.stream().mapToDouble(item -> item.getGiasp() * (double) item.getQuantity())
+        lCartItems = (List<CartItem>) session.getAttribute("selectedItems"); // Giả lập danh sách sản phẩm
+        double totalAmount = lCartItems.stream().mapToDouble(item -> item.getGiasp() * (double) item.getQuantity())
                 .sum(); // Tính tổng tiền
         String payments = l3.equals("payment") ? "VNPAY" : "COD";
         String notification = !l3.equals("payments") ? "Thanh toán khi giao hàng"
@@ -164,18 +158,18 @@ public class PaymentController {
         Order nOrder = new Order(String.valueOf(id),
                 user.getId(),
                 timestampString,
-                l2 + "{/}" + timestampString,
+                l + "{/}" + l1 + "{/}" + l2 + "{/}" + timestampString,
                 payments,
                 "Pending",
-                totalAmount, cartItems);
-        // nOrder.getCartItems().stream().mapToDouble(item->item.getGiasp()* (double)
+                totalAmount, lCartItems);
+        // nOrder.getlCartItems().stream().mapToDouble(item->item.getGiasp()* (double)
         // item.getQuantity()).sum();
         if (orderDAO.createOrder(nOrder) == 1) // Tạo đơn hàng mới
         {
             System.out.println("Tạo đơn hàng thành công!");
-            if (orderDAO.addOrderDetails(String.valueOf(id), cartItems) == 1) // Thêm sản phẩm vào đơn hàng
+            if (orderDAO.addOrderDetails(String.valueOf(id), lCartItems) == 1) // Thêm sản phẩm vào đơn hàng
             {
-                for (CartItem cartItem : cartItems) {
+                for (CartItem cartItem : lCartItems) {
                     if (productDAO.updateQuantityPro(cartItem.getItem(), cartItem.getQuantity()) == 1) {
                         System.out.println("Cap nhat lai thanh cong Pro: " + cartItem.getIDItem());
                     }
@@ -188,11 +182,11 @@ public class PaymentController {
         } else {
             System.out.println("Tạo đơn hàng thất bại!");
         }
+
         List<CartItem> listitem = (List<CartItem>) session.getAttribute("listcart");
-        List<CartItem> listSelect = (List<CartItem>) session.getAttribute("selectedItems");
 
         // Duyệt qua từng item trong listSelect
-        for (CartItem cartItem2 : listSelect) {
+        for (CartItem cartItem2 : lCartItems) {
             Iterator<CartItem> iterator = listitem.iterator();
             while (iterator.hasNext()) {
                 CartItem cartItem = iterator.next();
@@ -205,7 +199,7 @@ public class PaymentController {
             }
         }
 
-        model.addAttribute("listcart", listSelect);
+        model.addAttribute("listcart", lCartItems);
         model.addAttribute("userss", user);
         model.addAttribute("idorder", id);
         model.addAttribute("total", totalAmount);

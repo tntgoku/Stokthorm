@@ -13,7 +13,10 @@ public class Order {
     private String Statuspayment;
     private double totalAmount;
     private double ShippingFee;
+    int totalquantity;
     private List<CartItem> cartItems; // Danh sách sản phẩm trong đơn hàng
+    String Name, Address, Phone;
+    String date;
 
     public Order() {
     }
@@ -42,6 +45,38 @@ public class Order {
         this.status = status;
         this.totalAmount = totalAmount;
         this.cartItems = cartItems;
+    }
+
+    public String getName() {
+        return this.Name;
+    }
+
+    public void setName(String Name) {
+        this.Name = Name;
+    }
+
+    public String getAddress() {
+        return this.Address;
+    }
+
+    public void setAddress(String Address) {
+        this.Address = Address;
+    }
+
+    public String getPhone() {
+        return this.Phone;
+    }
+
+    public void setPhone(String Phone) {
+        this.Phone = Phone;
+    }
+
+    public String getDate() {
+        return this.date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public Order(String orderId, String userId, String OrderDate, String Note, String PaymentMethod, String status,
@@ -78,6 +113,14 @@ public class Order {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    public int getTotalquantity() {
+        return this.totalquantity;
+    }
+
+    public void setTotalquantity(int totalquantity) {
+        this.totalquantity = totalquantity;
     }
 
     public String getUserId() {
@@ -134,6 +177,10 @@ public class Order {
 
     public void setCartItems(List<CartItem> cartItems) {
         this.cartItems = cartItems;
+        this.totalquantity = cartItems.stream()
+                .mapToInt(item -> item.getQuantity())
+                .sum();
+
     }
 
     public Order orderId(String orderId) {

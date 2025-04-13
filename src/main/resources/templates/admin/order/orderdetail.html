@@ -1,13 +1,12 @@
 <!-- Header-->
-<?php include './views/layout/header.php' ?>
+<header  th:replace="~{admin/layout/header}"></header>
 <!-- EndHeader-->
-
 <!-- Navbar -->
-<?php include './views/layout/navbar.php' ?>
+<header  th:replace="~{admin/layout/navbar}"></header>
 <!-- /.navbar -->
 
 <!-- Main Sidebar Container -->
-<?php include './views/layout/sidebar.php' ?>
+<aside th:replace="~{admin/layout/sidebar}"> </aside>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -16,7 +15,7 @@
       <div class="row mb-2">
         <div class="col-sm-6">
           <h1><a
-              href="<?= BASE_URL_ADMIN . '?act=listOrder' ?>">Quản
+              href="@{/admin/listorder>">Quản
               Lý Đơn Hàng</a></h1>
         </div>
         <div>
@@ -28,30 +27,13 @@
   <section class="content">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-12">
-          <?php
-                if ($detailDonHang['trang_thai'] == 1) {
-                    $colorAlert = 'info'; // chờ xác nhận
-                } elseif ($detailDonHang['trang_thai'] == 2) {
-                    $colorAlert = 'warning'; // đang giao
-                } elseif ($detailDonHang['trang_thai'] == 3) {
-                    $colorAlert = 'success'; // đã giao
-                } else {
-                    $colorAlert = 'danger'; // đã hủy
-                }
-?>
-          <div class="alert alert-<?=$colorAlert?>" role="alert">
-            <?php
-  if ($detailDonHang['trang_thai'] == 1) {
-      echo'Trạng thái đơn hàng: Chờ xác nhận';
-  } elseif ($detailDonHang['trang_thai'] == 2) {
-      echo'Trạng thái đơn hàng: Đang giao';
-  } elseif ($detailDonHang['trang_thai'] == 3) {
-      echo'Trạng thái đơn hàng: Đã giao';
-  } else {
-      echo'Trạng thái đơn hàng: Hủy đơn';
-  }
-?>
+        <div class="col-12"  th:switch="${order.getStatus()}">
+          <p th:case="'Pending'" class="alert alert-info"> Chờ xác nhận</p>
+          <p th:case="'Shipped'" class="alert alert-warning"> Đang giao</p>
+          <p th:case="'Delivered'" class="alert alert-success"> Đã giao</p>
+          <p th:case="'Cancelled'" class="alert alert-danger"> Hủy đơn</p>
+          <p th:case="*" class="alert alert-danger" > Không xác định</p>
+   
           </div>
 
 
@@ -60,47 +42,46 @@
             <!-- title row -->
             <div class="row">
               <div class="col-12">
-                <h4> Shop sản phẩm giữ nhiệt BAĐ
-                  <small class="float-right">Ngày tạo:
-                    <?=$detailDonHang['ngay_tao']?></small>
+                <h4 style="    align-items: center;
+    display: flex;
+    text-align: center;
+    gap: 15px;"> Shop sản phẩm giữ nhiệt BAĐ
+                  <small class="float-right" th:text="'Ngày tạo: '+${order.getDate()}">
+                    </small>
                 </h4>
               </div>
               <!-- /.col -->
             </div>
             <!-- info row -->
-            <div class="row invoice-info">
+              <!-- /.col -->
               <div class="col-sm-4 invoice-col">
-                Thông tin tài khoản đặt
+                Thông tin  người nhận
                 <address>
-                  <strong><?= $detailDonHang['ho_ten'] ?></strong><br>
-                  Email:
-                  <?= $detailDonHang['email'] ?>
+                  <strong th:text="${order.getName()}"></strong><br>
+                  Phone: <span th:text="${order.getPhone()}"></span><br>
+                  Địa chỉ: <span th:text="${order.getAddress()}"></span><br>
                   <br>
-                  Phone:
-                  <?= $detailDonHang['sdt_nhan'] ?><br>
                 </address>
               </div>
               <!-- /.col -->
-              <div class="col-sm-4 invoice-col">
-                Người nhận
-                <address>
-                  <strong><?= $detailDonHang['ten_nhan'] ? $detailDonHang['ten_nhan'] : $detailDonHang['ho_ten'] ?></strong><br>
-                  Phone:
-                  <?= $detailDonHang['sdt_nhan'] ? $detailDonHang['sdt_nhan'] : $detailDonHang['sdt'] ?><br>
-                  Địa chỉ:
-                  <?= $detailDonHang['dia_chi_nhan'] ? $detailDonHang['dia_chi_nhan'] : $detailDonHang['dia_chi'] ?>
-                </address>
-              </div>
-              <!-- /.col -->
-              <div class="col-sm-4 invoice-col">
-                <b>Mã Đơn hàng:</b>
-                DH<?= $detailDonHang['order_id'] ?><br>
-                <b>Tổng số lượng:</b>
-                <?= $detailDonHang['tong_so_luong'] ?>
-                - Sản phẩm<br>
-                <b>Tổng tiền:</b>
-                <?= number_format($detailDonHang['tong_tien']) ?>
-                VNĐ
+              <div class="col-sm-8 invoice-col">
+                <b th:text="'Mã Đơn hàng: '+ ${order.getOrderId()}">Mã Đơn hàng:</b>
+                <br>
+                <b th:text="'Tổng số lượng: '+${order.getTotalquantity()} + ' - SP'">Tổng số lượng:</b>
+                <div style="font-weight: bolder;" th:switch="${order.getPaymentMethod()}" >
+                  Phương thức thanh toán: 
+                  <p th:case="'COD'">Thanh toán khi nhận hàng</p>
+                  <p th:case="'VNPAY'">VNPAY</p>
+                  <p th:case="*">Khác...</p>
+                </div>
+                <div style="font-weight: bolder;" th:switch="${order.getStatuspayment()} ">
+                  <p th:case="'Pending'" class="alert alert-danger">Đang chờ thanh toán</p>
+                  <p th:case="'Completed'" clas="text-success">Đã thanh toán</p>
+                  <p th:case="*">Khác...</p>
+                </div>
+                <b th:text="'Tiền Shipped: ' + ${order.getShippingFee()} +' VNĐ'"></b>
+                <br>
+                <b th:text="'Tổng tiền: ' + ${order.getTotalAmount()} +' VNĐ'"></b>
               </div>
               <!-- /.col -->
             </div>
@@ -121,30 +102,20 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <?php
-      //  var_dump($productDonHang);
-      foreach ($productDonHang as $sanpham) { ?>
-                    <tr>
-                      <td>
-                        <?= $sanpham['ctdh_id'] ?>
+                    <tr th:each="sanpham : ${productDonHang}">
+                      <td th:text="${sanpham.getIDItem1()}">
                       </td>
                       <td>
-                        <?= $sanpham['order_id'] ?>
                       </td>
-                      <td>
-                        <?= $sanpham['ten_sp'] ?>
+                      <td th:text="${sanpham.getItem().getName()}">
                       </td>
-                      <td>
-                        <?= $sanpham['size_value'] ?>
+                      <td th:text="${sanpham.getItem().getSize()} + '   '+ ${sanpham.getItem().getColor()}">
                       </td>
-                      <td>
-                        <?= $sanpham['gia_mua'] ?>
-                        VNĐ</td>
-                      <td>
-                        <?= $sanpham['so_luong_mua'] ?>
+                      <td th:text="${sanpham.getItem().getPrice()} +'VNĐ'">
+                        </td>
+                      <td th:text="${sanpham.getQuantity()}">
                       </td>
                     </tr>
-                    <?php }; ?>
                   </tbody>
                 </table>
               </div>
@@ -177,7 +148,7 @@
 </div>
 <!-- /.content-wrapper -->
 <!-- Footer -->
-<?php include './views/layout/footer.php' ?>
+<footer th:replace="~{admin/layout/footer}"> </footer>
 <!-- EndFooter -->
 <!-- Page specific script -->
 <script>

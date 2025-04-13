@@ -1,13 +1,12 @@
 <!-- Header-->
-<?php include './views/layout/header.php' ?>
+<header  th:replace="~{admin/layout/header}"></header>
 <!-- EndHeader-->
-
 <!-- Navbar -->
-<?php include './views/layout/navbar.php' ?>
+<header  th:replace="~{admin/layout/navbar}"></header>
 <!-- /.navbar -->
 
 <!-- Main Sidebar Container -->
-<?php include './views/layout/sidebar.php' ?>
+<aside th:replace="~{admin/layout/sidebar}"> </aside>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -16,7 +15,7 @@
       <div class="row mb-2">
         <div class="col-sm-6">
           <h1><a
-              href="<?= BASE_URL_ADMIN . '?act=listUser' ?>">Quản Lý Tài Khoản</a></h1>
+              th::href="@{/admin/listUser}">Quản Lý Tài Khoản</a></h1>
         </div>
       </div>
     </div><!-- /.container-fluid -->
@@ -41,57 +40,39 @@
                     <th>email</th>
                     <th>Sđt</th>
                     <th>Mật khẩu</th>
-                    
+                    <th>Đã mua</th>
+                    <th>Role</th>
                     <th>Ngày Tạo</th>
-                    <th>Ngày update</th>
-                    
                     <th>Chức Năng</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <?php foreach ($listUser as $User): ?>
-                  <tr>
-                    <td><?= $User['tk_id'] ?>
+                  <tr th:each="User : ${listUser}">
+                    <td   class="no-edit" th:text = "${User.getId()}">
                     </td>
-                    <td><?= $User['ho_ten'] ?>
+                    <td th:text = "${User.getName()}">
                     </td>
-                    <td><?= $User['dia_chi'] ?>
+                    <td th:text="${User.getAddress()}">
                     </td>
-                    <td><?= $User['email'] ?>
+                    <td th:text="${User.getEmail()}">
                     </td>
-                    <td><?= $User['sdt'] ?>
+                    <td th:text="${User.getPhonenumber()}">
                     </td>
-                    <td><?= $User['mat_khau'] ?>
+                    <td th:text="${User.getPassword()}">
                     </td>
-                    
-                    <td><?= $User['ngay_tao'] ?>
+                    <td th:text="${User.getTotalBuy()}">
                     </td>
-                    <td><?= $User['ngay_update'] ?>
-                    </td> 
-                    <td>
-                      <a href="<?= BASE_URL_ADMIN .'?act=deleteUser&id='.$User['tk_id'] ?>"
-                        onclick="return confirm('Bạn có chắc chắn xóa hay không?')"><button
+                    <td th:text="${User.getRole()}">
+                    </td>
+                    <td  class="no-edit"  th:text="${User.getCreateat()}">
+                    </td>
+                    <td  class="no-edit"  >
+                      <a th:href="@{/admin/listUser}"
+                        onclick="return confirm('Bạn có chắc chắn xóa hay không?')" th:attr="data-id=${User.getId()}"><button
                           class="btn btn-danger">Xóa</button></a>
                     </td>
 
                   </tr>
-                  <?php endforeach ?>
-                </tbody>
-                <tfoot>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Địa chỉ</th>
-                    <th>email</th>
-                    <th>Sđt</th>
-                    <th>Mật khẩu</th>
-                  
-                    <th>Ngày Tạo</th>
-                    <th>Ngày update</th>
-                    
-                    <th>Chức Năng</th>
-                  </tr>
-                </tfoot>
               </table>
             </div>
             <!-- /.card-body -->
@@ -110,7 +91,7 @@
 </div>
 <!-- /.content-wrapper -->
 <!-- Footer -->
-<?php include './views/layout/footer.php' ?>
+<footer th:replace="~{admin/layout/footer}"> </footer>
 <!-- EndFooter -->
 <!-- Page specific script -->
 <script>
@@ -129,6 +110,47 @@
       "info": true,
       "autoWidth": false,
       "responsive": true,
+    });
+  });
+
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const tableBody = document.querySelector("tbody");
+
+    tableBody.addEventListener("dblclick", function (e) {
+      const target = e.target;
+      if (target.tagName === "TD" && !target.classList.contains("no-edit")) {
+        // Nếu chưa có ô đang sửa thì cho phép sửa
+        if (!target.hasAttribute("contenteditable")) {
+          const original = target.textContent.trim();
+
+          target.setAttribute("contenteditable", "true");
+          target.focus();
+
+          // Chọn toàn bộ text
+          document.execCommand("selectAll", false, null);
+
+          // Khi người dùng nhấn Enter hoặc blur thì kết thúc edit
+          const finishEditing = () => {
+            target.removeAttribute("contenteditable");
+
+            const newValue = target.textContent.trim();
+            if (newValue !== original) {
+              // TODO: Gửi dữ liệu mới lên server bằng Ajax nếu muốn
+              console.log("Updated value:", newValue);
+            }
+          };
+
+          target.addEventListener("blur", finishEditing, { once: true });
+
+          target.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+              e.preventDefault(); // tránh xuống dòng
+              target.blur();
+            }
+          });
+        }
+      }
     });
   });
 </script>

@@ -9,7 +9,7 @@ public class Product {
     private int CategoryID;
     private int Quantity;
     private float Discount;
-
+    private int ProductID;
     public List<String> listIMG;
 
     public Product() {
@@ -17,7 +17,7 @@ public class Product {
 
     public Product(String iD, String name, int categoryID, float price,
             int quantity, String size, String color,
-            float discount, String description, String img) {
+            float discount, String description, String img, int ProductID) {
         ID = iD;
         Name = name;
         CategoryID = categoryID;
@@ -28,6 +28,7 @@ public class Product {
         Img = img;
         Discount = discount;
         Description = description;
+        this.ProductID = ProductID;
     }
 
     public Product(String iD, String name, int categoryID, float price,
@@ -51,6 +52,14 @@ public class Product {
         this.Quantity = Quanity;
         this.Img = Img;
         this.Description = Description;
+    }
+
+    public int getProductIDD() {
+        return this.ProductID;
+    }
+
+    public void setProductIDD(int ProductID) {
+        this.ProductID = ProductID;
     }
 
     public String getID() {
@@ -110,11 +119,11 @@ public class Product {
     }
 
     public int getCategoryID() {
-        return CategoryID;
+        return this.CategoryID;
     }
 
     public void setCategoryID(int CategoryID) {
-        CategoryID = CategoryID;
+        this.CategoryID = CategoryID;
     }
 
     public int getQuantity() {

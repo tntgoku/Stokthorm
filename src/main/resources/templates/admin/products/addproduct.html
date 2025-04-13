@@ -1,24 +1,24 @@
-<!-- Header -->
-<?php require './views/layout/header.php'; ?>
-<!-- End Header -->
-
+<!-- Header-->
+<header  th:replace="~{admin/layout/header}"></header>
+<!-- EndHeader-->
 <!-- Navbar -->
-<?php include './views/layout/navbar.php'; ?>
-<!-- End Navbar -->
+<header  th:replace="~{admin/layout/navbar}"></header>
+<!-- /.navbar -->
 
-<!-- Sidebar -->
-<?php include './views/layout/sidebar.php'; ?>
-<!-- End Sidebar -->
+<!-- Main Sidebar Container -->
+<aside th:replace="~{admin/layout/sidebar}"> </aside>
+<th:block th:if="${message != null}" th:text="${message}" class="alert alert-success" role="alert">
+</th:block>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
+     
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1><a
-                            href="<?= BASE_URL_ADMIN . '?act=listProduct' ?>">Quản
+                    <h1><a th:href="@{/admin/listproduct}">Quản
                             Lý Sản Phẩm</a></h1>
                 </div>
 
@@ -34,130 +34,87 @@
                     <div class="card card-primary">
                         <div class="card-header">
                             <h3 class="card-title">Thêm Sản Phẩm</h3>
-
+                        </div>
+                        <!-- Alert-->
+                        <div th:if="${message}" class="alert" 
+                        th:classappend="${message.contains('Thành công')} ? ' alert-success' : ' alert-danger'" 
+                        role="alert" style="margin-top: 10px;">
+                       <span th:text="${message}"></span>
                         </div>
                         <!-- form start -->
-                        <form
-                            action="<?= BASE_URL_ADMIN .'?act=addProduct' ?>"
-                            method="post" enctype="multipart/form-data">
+                        <form method="post" th:action="@{/admin/listproduct/act/formAddProduct}" enctype="multipart/form-data" id="add-product">
                             <div class="card-body row">
                                 <!-- Tên sản phẩm -->
                                 <div class="form-group col-12">
-                                    <label for="ten_sp">Tên Sản Phẩm</label>
-                                    <input type="text" name="ten_sp" class="form-control" id="ten_sp"
-                                        placeholder="Tên Sản Phẩm">
-                                    <?php if (isset($_SESSION['error']['ten_sp'])) { ?>
-                                    <p class="text-danger">
-                                        <?= $_SESSION['error']['ten_sp'] ?>
-                                    </p>
-                                    <?php } ?>
+                                    <label for="Name">Tên Sản Phẩm</label>
+                                    <input type="text" name="Name" class="form-control" id="Name" placeholder="Tên Sản Phẩm"  />
                                 </div>
-
+                        
                                 <!-- Giá -->
                                 <div class="form-group col-6">
-                                    <label for="gia_sp">Giá Sản Phẩm</label>
-                                    <input type="number" name="gia_sp" min="0" class="form-control" id="gia_sp"
-                                        placeholder="Giá">
-                                    <?php if (isset($_SESSION['error']['gia_sp'])) { ?>
-                                    <p class="text-danger">
-                                        <?= $_SESSION['error']['gia_sp'] ?>
-                                    </p>
-                                    <?php } ?>
+                                    <label for="Price">Giá Sản Phẩm</label>
+                                    <input type="number" name="Price" min="0" class="form-control" id="Price" placeholder="Giá"  />
                                 </div>
-
-                                <!-- Giá khuyến mãi -->
-                                <div class="form-group col-6">
-                                    <label for="km_sp">Giá Khuyến Mãi</label>
-                                    <input type="number" name="km_sp" min="0" class="form-control" id="km_sp"
-                                        placeholder="Giá Khuyến Mãi">
-                                    <?php if (isset($_SESSION['error']['km_sp'])) { ?>
-                                    <p class="text-danger">
-                                        <?= $_SESSION['error']['km_sp'] ?>
-                                    </p>
-                                    <?php } ?>
-                                </div>
-
-                                <!-- Danh mục -->
-                                <div class="form-group col-6">
-                                    <label for="dm_id">Thuộc Danh Mục</label>
-                                    <select class="form-control" name="dm_id" id="dm_id">
-                                        <option selected disabled>Chọn danh mục sản phẩm</option>
-                                        <?php foreach ($listCategory as $danhMuc): ?>
-                                        <option
-                                            value="<?= $danhMuc['dm_id'] ?>">
-                                            <?= $danhMuc['ten_dm'] ?>
-                                        </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <?php if (isset($_SESSION['error']['dm_id'])) { ?>
-                                    <p class="text-danger">
-                                        <?= $_SESSION['error']['dm_id'] ?>
-                                    </p>
-                                    <?php } ?>
-                                </div>
-
-                                <!-- Ảnh sản phẩm -->
-                                <div class="mb-3 col-6">
-                                    <label for="img_sp" class="form-label">Ảnh sản phẩm</label>
-                                    <input type="file" name="img_sp" class="form-control" id="img_sp"
-                                        placeholder="Ảnh sản phẩm">
-                                    <?php if (isset($_SESSION['error']['img_sp'])) { ?>
-                                    <p class="text-danger">
-                                        <?= $_SESSION['error']['img_sp'] ?>
-                                    </p>
-                                    <?php } ?>
-                                </div>
-
-                                <!-- Size -->
-                                <div class="form-group col-6">
-                                    <label for="size_id">Size</label>
-                                    <select class="form-control" name="size_id" id="size_id">
-                                        <option selected disabled>Chọn size sản phẩm</option>
-
-                                        <?php foreach ($listSize as $size): ?>
-                                        <option
-                                            value="<?= $size['size_id'] ?>">
-                                            <?= $size['size_value'] ?>
-                                        </option>
-                                        <?php endforeach; ?>
-
-                                    </select>
-                                    <?php if (isset($_SESSION['error']['size_id'])) { ?>
-                                    <p class="text-danger">
-                                        <?= $_SESSION['error']['size_id'] ?>
-                                    </p>
-                                    <?php } ?>
-                                </div>
-
-                                <!-- Số lượng -->
-                                <div class="form-group col-6">
-                                    <label for="so_luong">Số lượng</label>
-                                    <input type="number" name="so_luong" min="0" class="form-control" id="so_luong"
-                                        placeholder="Số lượng">
-                                    <?php if (isset($_SESSION['error']['so_luong'])) { ?>
-                                    <p class="text-danger">
-                                        <?= $_SESSION['error']['so_luong'] ?>
-                                    </p>
-                                    <?php } ?>
-                                </div>
+                        
                                 <!-- Mô tả -->
                                 <div class="form-group col-12">
-                                    <label for="mo_ta">Mô tả Sản Phẩm</label>
-                                    <input type="text" name="mo_ta" class="form-control" id="mo_ta"
-                                        placeholder="Mô tả Sản Phẩm">
-                                    <?php if (isset($_SESSION['error']['mo_ta'])) { ?>
-                                    <p class="text-danger">
-                                        <?= $_SESSION['error']['mo_ta'] ?>
-                                    </p>
-                                    <?php } ?>
+                                    <label for="Description">Mô tả Sản Phẩm</label>
+                                    <input type="text" name="Description" class="form-control" id="Description" placeholder="Mô tả Sản Phẩm" />
+                                </div>
+                        
+                                <!-- Size -->
+                                <div class="form-group col-6">
+                                    <label for="Size">Size</label>
+                                    <input type="text" name="Size" class="form-control" id="Size" placeholder="Size" />
+                                </div>
+                        
+                                <!-- Màu sắc -->
+                                <div class="form-group col-6">
+                                    <label for="Color">Màu Sắc</label>
+                                    <input type="text" name="Color" class="form-control" id="Color" placeholder="Màu sắc"  />
+                                </div>
+                        
+                                <!-- Ảnh sản phẩm -->
+                                <div class="mb-3 col-6">
+                                    <label for="Img" class="form-label">Ảnh sản phẩm</label>
+                                    <input type="file" name="Img" class="form-control" id="Img" />
+                                </div>
+                        
+                                <!-- Danh mục -->
+                                <div class="form-group col-6">
+                                    <label for="CategoryID">Thuộc Danh Mục</label>
+                                    <select class="form-selectcategori" aria-label="Default select example" name="CategoryID">
+                                        <option value="">-- Chọn danh mục --</option> 
+                                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"   th:selected="${category.id == 1}">Select Category</option>
+                                    </select>
+                                </div>
+                        
+                                <!-- Số lượng -->
+                                <div class="form-group col-6">
+                                    <label for="Quantity">Số lượng</label>
+                                    <input type="number" name="Quantity" min="0" class="form-control" id="Quantity" placeholder="Số lượng"  />
+                                </div>
+                        
+                                <!-- Giảm giá -->
+                                <div class="form-group col-6">
+                                    <label for="Discount">Giảm Giá</label>
+                                    <input type="number" name="Discount" min="0" class="form-control" id="Discount" placeholder="Giảm giá"  />
+                                </div>
+                        
+                                <!-- List ảnh -->
+                                <div class="form-group col-12">
+                                    <label for="listIMG">Ảnh Sản Phẩm (nhiều ảnh)</label>
+                                    <input type="file" name="listIMG" class="form-control" id="listIMG" multiple />
                                 </div>
                             </div>
-
+                        
                             <!-- Nút submit -->
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Thêm</button>
                             </div>
                         </form>
+                        
+                        
 
                     </div>
                 </div>
@@ -167,9 +124,10 @@
 </div>
 
 <!-- Footer -->
-<?php include './views/layout/footer.php'; ?>
+<footer th:replace="~{admin/layout/footer}"> </footer>
 <!-- End Footer -->
 
 </body>
+
 
 </html>

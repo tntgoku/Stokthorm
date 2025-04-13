@@ -169,8 +169,6 @@ public class PaymentController {
                 payments,
                 "Pending",
                 totalAmount, lCartItems);
-        // nOrder.getlCartItems().stream().mapToDouble(item->item.getGiasp()* (double)
-        // item.getQuantity()).sum();
         if (orderDAO.createOrder(nOrder) == 1) // Tạo đơn hàng mới
         {
             System.out.println("Tạo đơn hàng thành công!");

@@ -205,6 +205,7 @@ public class ProductDAO {
         }
     }
 
+    // Cái này ở đây dùng Proc
     public int deleteProduct(int ID) {
         String sql = "{call xoasanpham(?)}";
         try {
@@ -232,7 +233,7 @@ public class ProductDAO {
                     rs.getString("chuthich"),
                     "/assets/img/product/1733800842_vn-11134207-7r98o-lwpnuez7m7dn51.jpg",
                     rs.getInt("ProductID")),
-                    offset, size); // ✅ offset trước, size sau
+                    offset, size); // offset trước, size sau
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();

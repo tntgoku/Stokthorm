@@ -210,25 +210,27 @@ public class ControllerAdmin {
         temp.setPrice((float) price);
         temp.setQuantity(quantity);
         // Log thông tin ảnh chính
+        List<String> listimg = new ArrayList<String>();
         String imString = "";
-        if (!imgFile.isEmpty()) {
+        if (imgFile != null && !imgFile.isEmpty()) {
             imString = Fileimg(imgFile);
+            listimg.add(imString);
             temp.setImg(imString);
         } else {
             System.out.println("Error");
         }
 
         if (listImgFiles != null) {
-            List<String> listimg = new ArrayList<String>();
             for (MultipartFile multipartFile : listImgFiles) {
                 if (!multipartFile.isEmpty()) {
                     System.out.println(Fileimg(multipartFile) + "\nTheem thanh cong");
-
                     listimg.add(Fileimg(imgFile));
                 }
             }
-            temp.setListIMG(listimg);
         }
+
+        temp.setListIMG(listimg);
+
         int status = productDAO.addProduct(temp);
         if (status != -1) {
             model.addAttribute("message", "Thêm Thành công ");
@@ -237,6 +239,26 @@ public class ControllerAdmin {
         }
         model.addAttribute("categories", categoryDAO.getallCate());
         return "admin/products/addproduct"; // Chuyển hướng về danh sách sản phẩm
+    }
+
+    @GetMapping("/admin/listproduct/formEditProduct")
+    public String showEditForm(@RequestParam("id") Long id, Model model) {
+        Product temp = productDAO.FindProduct1(String.valueOf(id));
+        temp.setListIMG(productDAO.getListIMG(temp));
+        model.addAttribute("product", temp);
+        model.addAttribute("listCategory", categoryDAO.getallCate());
+        return "admin/products/editproduct";
+    }
+
+    @PostMapping("/admin/listproduct/xoaProduct")
+    public String deleteProduct(@RequestParam("id") int id, Model model, HttpSession session) {
+        // Gọi stored procedure hoặc DAO để xoá
+        if (productDAO.deleteProduct(id) != -1) {
+            model.addAttribute("succ", "Xoá thành công!!!  " + id);
+        } else {
+            model.addAttribute("succ", "Xoá không thành công.....  " + id);
+        }
+        return FormList(0, 10, session, model); // Quay về danh sách sản phẩm
     }
 
     public String Fileimg(MultipartFile fileimg) {
@@ -285,23 +307,4 @@ public class ControllerAdmin {
         }
     }
 
-    @GetMapping("/admin/listproduct/formEditProduct")
-    public String showEditForm(@RequestParam("id") Long id, Model model) {
-        Product temp = productDAO.FindProduct1(String.valueOf(id));
-        temp.setListIMG(productDAO.getListIMG(temp));
-        model.addAttribute("product", temp);
-        model.addAttribute("listCategory", categoryDAO.getallCate());
-        return "admin/products/editproduct";
-    }
-
-    @PostMapping("/admin/listproduct/xoaProduct")
-    public String deleteProduct(@RequestParam("id") int id, Model model, HttpSession session) {
-        // Gọi stored procedure hoặc DAO để xoá
-        if (productDAO.deleteProduct(id) != -1) {
-            model.addAttribute("succ", "Xoá thành công!!!  " + id);
-        } else {
-            model.addAttribute("succ", "Xoá không thành công.....  " + id);
-        }
-        return FormList(0, 10, session, model); // Quay về danh sách sản phẩm
-    }
 }

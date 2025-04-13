@@ -22,19 +22,12 @@ public class ControllerM {
     @Autowired
     private ProductDAO productD;
     List<Product> listProductC;
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    String timestampString;
 
     @GetMapping("/")
     public String GoHomePage(Model model) {
         System.out.println("Vao trang chu");
-        // Xóa toàn bộ session
-        // session.removeAttribute("taikhoan");
-        // session.invalidate();
-        // model.addAttribute("taikhoan", null);
-
-        // List<Users> listUser = userDAO.GetAllUser();
-        // for (Users map : listUser) {
-        // System.out.println("Data: " + map.toString());
-        // }
         return HomePage(model);
     }
 
@@ -57,8 +50,7 @@ public class ControllerM {
             System.out.println("Error");
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        String timestampString = sdf.format(new Date()); // Lấy thời gian hiện tại dưới dạng String
+        timestampString = sdf.format(new Date()); // Lấy thời gian hiện tại dưới dạng String
 
         System.out.println("Timestamp String: " + timestampString);
         return "index";

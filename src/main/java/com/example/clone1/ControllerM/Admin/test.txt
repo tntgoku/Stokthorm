@@ -1,0 +1,65 @@
+    @GetMapping("/thankyouvnp")
+    public String handleVnpayReturn(HttpServletRequest request, Model model, HttpSession session) {
+        int paymentStatus = vnPayService.orderReturn(request);
+
+        String orderInfo = request.getParameter("vnp_OrderInfo");
+        String paymentTime = request.getParameter("vnp_PayDate");
+        String transactionId = request.getParameter("vnp_TransactionNo");
+        String totalPrice = request.getParameter("vnp_Amount");
+
+        model.addAttribute("orderId", orderInfo);
+        model.addAttribute("totalPrice", totalPrice);
+        model.addAttribute("paymentTime", paymentTime);
+        model.addAttribute("transactionId", transactionId);
+        if (paymentStatus != 1) {
+            return "orderfail";
+        }
+        List<CartItem> cartItems = (List<CartItem>) session.getAttribute("selectedItems"); // Giả lập danh sách sản phẩm
+        if (cartItems == null) {
+            System.out.println("ERrrororoorororoaowdoawd");
+        }
+        Map<String, Object> requestData = (Map<String, Object>) session.getAttribute("dataRequest");
+        if (requestData == null) {
+            return "orderfail";
+        }
+        String l = requestData.get("ten") != null ? (String) requestData.get("ten") : "";
+        String l1 = requestData.get("sdt") != null ? (String) requestData.get("sdt") : "";
+        String l2 = requestData.get("diaChi") != null ? (String) requestData.get("diaChi") : "";
+        String l3 = requestData.get("method") != null ? (String) requestData.get("method") : "";
+        Users user = (Users) session.getAttribute("taikhoan"); // Giả lập người dùng
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String timestampString = sdf.format(new Date());
+        if (user == null) {
+            user = new Users();
+            int id = Integer.parseInt(userDAO.getLastUserID()) + 1; // Giả lập ID người dùng
+            user.setId(String.valueOf(id)); // Tạo ID người dùng giả lập
+            user.setName(l);
+            user.setPhonenumber(l1);
+            user.setAddress(l2);
+            user.setPassword(l + user.getId() + timestampString.split(" ")[1]);
+            String[] part;
+            String lastname = null;
+            part = l.trim().split(" ");
+            if (part.length == 1)
+                lastname = part[0];
+            else if (part.length == 2)
+                lastname = part[1];
+            else
+                lastname = part[part.length - 1];
+            String[] datePart = timestampString.split(" "); // Lấy phần ngày
+            user.setEmail(lastname + datePart[0] + datePart[1] + "@gmail.com");
+            System.out.println(user.toString());
+            userDAO.createUser(user);
+        }
+
+        return paymentStatus == 1 ? "thanksyouonline" : "orderfail"; 
+    }
+    awdawdawdawdawdawdawdawdawdawdawdawdsdasdasdasd
+    dawdada
+    wdaW
+    dawwd
+    awdawdawdawdawdawdawdawdawdawdawdawdsdasdasdasdw
+no nam o day ne adadadd
+awdawdawdawdawd12asd31aw3d21a3w2da1wd2a1wd3a2wd1
+no nam o day ne adadadd
+awdawdawd them vao o day thay doi tu a -z

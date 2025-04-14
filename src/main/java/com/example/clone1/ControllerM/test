@@ -1,12 +1,10 @@
 cai nay lassdjawkdajwldkajwdlakwjdalkwdjalkwdjalwkdjalwdkjahsjlkdhb
-<<<<<<< HEAD
 
 
 
 
 
 Thay doi o day ne 1212312312365124654
-=======
     @GetMapping("/thankyouvnp")
     public String handleVnpayReturn(HttpServletRequest request, Model model, HttpSession session) {
         int paymentStatus = vnPayService.orderReturn(request);
@@ -72,4 +70,3 @@ no nam o day ne adadadd
 awdawdawdawdawd12asd31aw3d21a3w2da1wd2a1wd3a2wd1
 no nam o day ne adadadd
 awdawdawd them vao o day thay doi tu a -z
->>>>>>> 8ba20c3079f43cc92bda509fd25bbd5377228078

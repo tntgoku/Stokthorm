@@ -37,11 +37,18 @@ public class ControllerAdmin {
     private static final String UPLOAD_DIR = "./src/main/resources/static/assets/img/logo/";
 
     @GetMapping("/admin")
-    public String gethomepageadmin(Model model) {
+    public String gethomepageadmin(Model model, HttpSession session) {
         System.out.println("Welecome Go to Home Page View Admin");
+        if (session.getAttribute("taikhoan") == null) {
+            return "redirect:/";
+        } else {
+            Users users = (Users) session.getAttribute("taikhoan");
+            if (users.getRole() != "admin") {
+                return "redirect:/";
+            }
+        }
         return "admin/homepage";
     }
-
     @GetMapping("/info-Acc")
     public String getinfome(@RequestParam("id") String UsersID, Model model, HttpSession session) {
         if (UsersID == null) {

@@ -8,15 +8,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.http.server.ServletServerHttpRequest;
-import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.socket.server.HandshakeInterceptor;
-
-import java.net.InetSocketAddress;
-import java.util.Map;
 
 public class IpInterceptor implements HandshakeInterceptor {
 
@@ -25,7 +18,6 @@ public class IpInterceptor implements HandshakeInterceptor {
     @Override
     public void afterHandshake(ServerHttpRequest arg0, ServerHttpResponse arg1, WebSocketHandler arg2,
             @Nullable Exception arg3) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -38,6 +30,5 @@ public class IpInterceptor implements HandshakeInterceptor {
             attributes.put("client-ip", ip); // Lưu IP vào session attributes
         }
         return true;
-        // TODO Auto-generated method stub
     }
 }
